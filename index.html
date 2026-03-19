@@ -1,0 +1,1502 @@
+<!DOCTYPE html>
+<html lang="km" data-theme="dark">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>TypingMaster KH · v3</title>
+<link href="https://fonts.googleapis.com/css2?family=Kantumruy+Pro:wght@300;400;600;700&family=Fira+Code:wght@300;400;500;600&family=Outfit:wght@300;400;600;700;800&display=swap" rel="stylesheet">
+<style>
+/* ===== CSS VARIABLES — THEME SYSTEM ===== */
+:root {
+  --accent:    #38bdf8;
+  --accent2:   #818cf8;
+  --accent3:   #fb923c;
+  --green:     #34d399;
+  --red:       #f87171;
+  --yellow:    #fbbf24;
+  --left:      #60a5fa;
+  --right:     #f472b6;
+  --home:      #fbbf24;
+  /* Dark mode defaults */
+  --bg:        #080c14;
+  --bg2:       #0d1220;
+  --bg3:       #111827;
+  --card:      #0f1623;
+  --border:    #1a2540;
+  --border2:   #243050;
+  --text:      #e2e8f0;
+  --muted:     #475569;
+  --muted2:    #64748b;
+  --shadow:    rgba(0,0,0,0.5);
+}
+[data-theme="light"] {
+  --bg:     #f0f4ff;
+  --bg2:    #ffffff;
+  --bg3:    #e8eef8;
+  --card:   #ffffff;
+  --border: #cbd5e1;
+  --border2:#94a3b8;
+  --text:   #1e293b;
+  --muted:  #94a3b8;
+  --muted2: #64748b;
+  --shadow: rgba(0,0,0,0.1);
+}
+*{margin:0;padding:0;box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{
+  background:var(--bg);
+  color:var(--text);
+  font-family:'Outfit','Kantumruy Pro',sans-serif;
+  min-height:100vh;
+  transition:background .3s,color .3s;
+}
+body::before{
+  content:'';position:fixed;inset:0;
+  background:radial-gradient(ellipse 60% 40% at 20% 10%, rgba(var(--accent-rgb,56,189,248),0.05) 0%,transparent 60%),
+             radial-gradient(ellipse 50% 50% at 80% 90%, rgba(129,140,248,0.05) 0%,transparent 60%);
+  pointer-events:none;z-index:0;
+  transition:all .3s;
+}
+[data-theme="light"] body::before{
+  background:radial-gradient(ellipse 60% 40% at 20% 10%, rgba(56,189,248,0.08) 0%,transparent 60%),
+             radial-gradient(ellipse 50% 50% at 80% 90%, rgba(129,140,248,0.06) 0%,transparent 60%);
+}
+
+/* ===== PAGES ===== */
+.page{display:none;position:relative;z-index:1;min-height:100vh}
+.page.active{display:block}
+
+/* ===== REGISTRATION ===== */
+.reg-wrap{
+  min-height:100vh;display:flex;align-items:center;justify-content:center;
+  padding:20px;
+}
+.reg-card{
+  background:var(--card);border:1px solid var(--border);
+  border-radius:24px;padding:44px 40px;
+  width:100%;max-width:480px;
+  position:relative;overflow:hidden;
+  box-shadow:0 20px 60px var(--shadow);
+}
+.reg-card::before{content:'';position:absolute;top:0;left:0;right:0;height:3px;
+  background:linear-gradient(90deg,var(--accent2),var(--accent),var(--accent3))}
+.reg-logo{text-align:center;margin-bottom:28px}
+.reg-logo .icon{font-size:52px;display:block;margin-bottom:10px;
+  animation:float 3s ease-in-out infinite}
+@keyframes float{0%,100%{transform:translateY(0)}50%{transform:translateY(-8px)}}
+.reg-logo h1{font-size:26px;font-weight:800;
+  background:linear-gradient(135deg,var(--accent),var(--accent2));
+  -webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+.reg-logo p{font-size:13px;color:var(--muted2);font-family:'Fira Code',monospace;margin-top:4px}
+.form-tabs{display:flex;gap:0;background:var(--bg2);border:1px solid var(--border);
+  border-radius:12px;padding:4px;margin-bottom:24px}
+.form-tab{flex:1;padding:9px;border:none;border-radius:9px;
+  background:none;color:var(--muted2);font-family:'Outfit',sans-serif;
+  font-size:13px;font-weight:600;cursor:pointer;transition:all .2s}
+.form-tab.active{background:linear-gradient(135deg,var(--accent2),var(--accent));color:#fff;
+  box-shadow:0 2px 10px rgba(56,189,248,0.3)}
+.form-group{margin-bottom:18px}
+.form-group label{display:block;font-size:13px;font-weight:600;
+  color:var(--muted2);margin-bottom:7px;font-family:'Fira Code',monospace}
+.form-input{
+  width:100%;background:var(--bg2);border:1.5px solid var(--border);
+  border-radius:10px;padding:13px 16px;
+  color:var(--text);font-family:'Outfit',sans-serif;font-size:15px;
+  outline:none;transition:all .25s;
+}
+.form-input:focus{border-color:var(--accent);box-shadow:0 0 0 3px rgba(56,189,248,0.12)}
+.form-input::placeholder{color:var(--muted)}
+select.form-input{cursor:pointer}
+.btn-full{
+  width:100%;padding:14px;border:none;border-radius:12px;
+  background:linear-gradient(135deg,var(--accent2),var(--accent));
+  color:#fff;font-family:'Outfit',sans-serif;font-size:15px;font-weight:700;
+  cursor:pointer;transition:all .25s;margin-top:4px;
+  box-shadow:0 4px 20px rgba(56,189,248,0.25);
+}
+.btn-full:hover{transform:translateY(-2px);box-shadow:0 8px 28px rgba(56,189,248,0.35)}
+.reg-divider{text-align:center;color:var(--muted);font-size:12px;
+  font-family:'Fira Code',monospace;margin:16px 0;position:relative}
+.reg-divider::before,.reg-divider::after{content:'';position:absolute;top:50%;
+  width:42%;height:1px;background:var(--border)}
+.reg-divider::before{left:0}.reg-divider::after{right:0}
+.theme-toggle-reg{
+  position:absolute;top:16px;right:16px;
+  background:var(--bg2);border:1px solid var(--border);
+  border-radius:8px;padding:7px 10px;cursor:pointer;
+  font-size:16px;transition:all .2s;
+}
+.theme-toggle-reg:hover{background:var(--bg3)}
+
+/* ===== MAIN APP ===== */
+.app{display:flex;min-height:100vh}
+
+/* SIDEBAR */
+.sidebar{
+  width:255px;min-width:255px;
+  background:var(--bg2);border-right:1px solid var(--border);
+  display:flex;flex-direction:column;
+  position:fixed;top:0;left:0;bottom:0;
+  overflow-y:auto;z-index:50;
+  transition:transform .3s,background .3s,border .3s;
+}
+.sidebar-logo{padding:18px 16px 14px;border-bottom:1px solid var(--border)}
+.logo-row{display:flex;align-items:center;gap:10px}
+.logo-icon{font-size:26px}
+.logo-info .logo-title{font-size:16px;font-weight:800;
+  background:linear-gradient(135deg,var(--accent),var(--accent2));
+  -webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+.logo-info .logo-sub{font-size:10px;color:var(--muted2);font-family:'Fira Code',monospace}
+.user-badge{
+  margin:12px 16px 0;padding:10px 12px;
+  background:linear-gradient(135deg,rgba(56,189,248,0.08),rgba(129,140,248,0.08));
+  border:1px solid rgba(56,189,248,0.2);border-radius:10px;
+  display:flex;align-items:center;gap:9px;
+}
+.user-avatar{
+  width:34px;height:34px;border-radius:50%;
+  background:linear-gradient(135deg,var(--accent2),var(--accent));
+  display:flex;align-items:center;justify-content:center;
+  font-weight:700;font-size:14px;color:#fff;flex-shrink:0;
+}
+.user-info .user-name{font-size:13px;font-weight:700;color:var(--text)}
+.user-info .user-class{font-size:10px;color:var(--muted2);font-family:'Fira Code',monospace}
+
+.sidebar-nav{padding:10px 10px 4px}
+.nav-label{font-size:10px;color:var(--muted);text-transform:uppercase;
+  letter-spacing:2px;font-family:'Fira Code',monospace;padding:8px 6px 4px}
+.nav-btn{
+  width:100%;text-align:left;padding:9px 10px;
+  background:none;border:none;color:var(--muted2);
+  font-size:13px;font-family:'Outfit',sans-serif;
+  cursor:pointer;border-radius:8px;margin:1px 0;
+  display:flex;align-items:center;gap:8px;
+  transition:all .2s;
+}
+.nav-btn:hover{background:var(--bg3);color:var(--text)}
+.nav-btn.active{background:linear-gradient(135deg,rgba(56,189,248,0.12),rgba(129,140,248,0.08));
+  color:var(--accent);border:1px solid rgba(56,189,248,0.2)}
+.nav-btn .nav-icon{font-size:15px;width:22px;text-align:center}
+
+.lesson-section{padding:4px 10px 10px}
+.lesson-group{margin-bottom:2px}
+.group-hdr{display:flex;align-items:center;gap:6px;
+  padding:6px 6px 3px;font-size:10px;color:var(--muted2)}
+.group-dot{width:7px;height:7px;border-radius:50%;flex-shrink:0}
+.lesson-item{
+  width:100%;text-align:left;padding:7px 8px 7px 20px;
+  background:none;border:none;color:var(--muted2);
+  font-size:12px;font-family:'Outfit',sans-serif;
+  cursor:pointer;border-radius:7px;margin:1px 0;
+  display:flex;align-items:center;gap:7px;
+  transition:all .2s;
+}
+.lesson-item:hover{background:var(--bg3);color:var(--text)}
+.lesson-item.active{background:rgba(56,189,248,0.1);color:var(--accent);
+  border:1px solid rgba(56,189,248,0.18)}
+.lnum{font-family:'Fira Code',monospace;font-size:10px;background:var(--bg3);
+  border:1px solid var(--border);border-radius:4px;padding:1px 5px;
+  color:var(--muted2);min-width:22px;text-align:center;flex-shrink:0}
+.lesson-item.active .lnum{background:rgba(56,189,248,0.15);border-color:var(--accent);color:var(--accent)}
+.lcheck{color:var(--green);font-size:11px;margin-left:auto}
+
+/* MAIN CONTENT */
+.main{margin-left:255px;flex:1;padding:22px 24px 60px;max-width:calc(100vw - 255px)}
+
+/* TOP BAR */
+.topbar{display:flex;align-items:center;justify-content:space-between;margin-bottom:18px;gap:12px;flex-wrap:wrap}
+.topbar-left h2{font-size:20px;font-weight:700}
+.topbar-left p{font-size:12px;color:var(--muted2);font-family:'Fira Code',monospace;margin-top:2px}
+.topbar-right{display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+
+/* ICON BUTTONS */
+.icon-btn{
+  padding:8px 12px;background:var(--bg2);border:1px solid var(--border);
+  border-radius:9px;color:var(--muted2);font-size:14px;cursor:pointer;
+  display:flex;align-items:center;gap:5px;font-family:'Outfit',sans-serif;
+  font-size:13px;font-weight:600;transition:all .2s;
+}
+.icon-btn:hover{background:var(--bg3);color:var(--text);border-color:var(--muted2)}
+.icon-btn.active-btn{background:rgba(56,189,248,0.1);color:var(--accent);border-color:rgba(56,189,248,0.3)}
+
+/* STATS */
+.stats-row{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-bottom:16px}
+.stat-card{background:var(--card);border:1px solid var(--border);border-radius:12px;
+  padding:13px 15px;position:relative;overflow:hidden;transition:background .3s,border .3s}
+.stat-card::after{content:'';position:absolute;top:0;left:0;right:0;height:2px;
+  background:linear-gradient(90deg,var(--accent2),var(--accent))}
+.stat-val{font-family:'Fira Code',monospace;font-size:26px;font-weight:600;
+  color:var(--accent);line-height:1;margin-bottom:3px;transition:all .3s}
+.stat-lbl{font-size:10px;color:var(--muted);text-transform:uppercase;letter-spacing:1px;font-family:'Fira Code',monospace}
+
+/* PROGRESS */
+.prog-wrap{height:3px;background:var(--border);border-radius:2px;margin-bottom:14px;overflow:hidden}
+.prog-fill{height:100%;background:linear-gradient(90deg,var(--accent2),var(--accent));
+  border-radius:2px;transition:width .25s}
+
+/* TEXT CARD */
+.text-card{background:var(--card);border:1px solid var(--border);
+  border-radius:14px;padding:24px;margin-bottom:12px;
+  position:relative;min-height:90px;transition:all .3s}
+.text-card.typing-active{border-color:rgba(56,189,248,0.4);box-shadow:0 0 24px rgba(56,189,248,0.07)}
+.text-card.shake{animation:shake .3s}
+@keyframes shake{0%,100%{transform:translateX(0)}25%{transform:translateX(-5px)}75%{transform:translateX(5px)}}
+.lang-pill{position:absolute;top:-10px;left:18px;
+  background:linear-gradient(135deg,var(--accent2),var(--accent));
+  color:#fff;font-size:10px;font-family:'Fira Code',monospace;
+  padding:2px 10px;border-radius:8px;letter-spacing:1px;text-transform:uppercase}
+.display-text{font-size:19px;line-height:1.9;word-break:break-word;user-select:none}
+.display-text span.correct{color:var(--green)}
+.display-text span.wrong{color:var(--red);background:rgba(248,113,113,0.12);border-radius:2px}
+.display-text span.cursor{color:var(--bg);background:var(--accent);border-radius:3px;
+  animation:blink .9s step-end infinite}
+@keyframes blink{0%,100%{background:var(--accent)}50%{background:rgba(56,189,248,0.3);color:var(--accent)}}
+.display-text span.pending{color:var(--muted)}
+
+/* INPUT */
+.input-row{display:flex;gap:8px;margin-bottom:14px}
+.typing-input{
+  flex:1;background:var(--bg2);border:1.5px solid var(--border);
+  border-radius:11px;padding:12px 16px;color:var(--text);
+  font-family:'Fira Code',monospace;font-size:15px;
+  outline:none;resize:none;min-height:50px;
+  transition:border-color .25s,box-shadow .25s;
+}
+.typing-input:focus{border-color:var(--accent);box-shadow:0 0 0 3px rgba(56,189,248,0.1)}
+
+/* CONTROLS */
+.ctrl-row{display:flex;gap:7px;flex-wrap:wrap;margin-bottom:14px}
+.btn{padding:9px 18px;border-radius:9px;border:none;
+  font-family:'Outfit',sans-serif;font-size:13px;font-weight:600;
+  cursor:pointer;display:flex;align-items:center;gap:5px;transition:all .2s}
+.btn-primary{background:linear-gradient(135deg,var(--accent2),var(--accent));color:#fff;
+  box-shadow:0 3px 12px rgba(56,189,248,0.2)}
+.btn-primary:hover{transform:translateY(-2px);box-shadow:0 6px 18px rgba(56,189,248,0.3)}
+.btn-ghost{background:var(--bg2);color:var(--text);border:1px solid var(--border)}
+.btn-ghost:hover{background:var(--bg3);border-color:var(--muted2)}
+.btn-warn{background:rgba(251,146,60,0.1);color:var(--accent3);border:1px solid rgba(251,146,60,0.25)}
+
+/* WPM CHART */
+.wpm-chart{display:flex;align-items:flex-end;gap:2px;height:32px;margin-bottom:16px}
+.wc-bar{flex:1;background:rgba(56,189,248,0.15);border-radius:2px 2px 0 0;min-height:3px;transition:height .4s}
+
+/* KEYBOARD */
+.kb-section{background:var(--card);border:1px solid var(--border);border-radius:14px;padding:18px;margin-top:16px;transition:background .3s,border .3s}
+.kb-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:14px;flex-wrap:wrap;gap:8px}
+.kb-title{font-size:13px;font-weight:700}
+.kb-legend{display:flex;gap:10px;flex-wrap:wrap}
+.leg-item{display:flex;align-items:center;gap:4px;font-size:10px;color:var(--muted2);font-family:'Fira Code',monospace}
+.leg-dot{width:9px;height:9px;border-radius:3px}
+.keyboard{display:flex;flex-direction:column;gap:4px;align-items:center}
+.kb-row{display:flex;gap:4px;justify-content:center}
+.key{
+  min-width:36px;height:38px;background:var(--bg2);border:1.5px solid var(--border2);
+  border-radius:6px;display:flex;align-items:center;justify-content:center;
+  font-family:'Fira Code',monospace;font-size:11px;font-weight:500;
+  color:var(--muted2);position:relative;cursor:default;
+  box-shadow:0 3px 0 var(--shadow);flex-shrink:0;transition:all .15s;
+}
+.key .sub{font-size:8px;position:absolute;bottom:3px;right:4px;color:var(--muted);opacity:.7}
+.key.w15{min-width:52px}.key.w2{min-width:70px}.key.w25{min-width:88px}
+.key.w3{min-width:106px}.key.w4{min-width:140px}.key.wsp{min-width:230px}
+.key.home-key::after{content:'';position:absolute;bottom:4px;left:50%;transform:translateX(-50%);
+  width:5px;height:5px;border-radius:50%;background:var(--home);opacity:.9}
+.key.fL0{background:rgba(96,165,250,.15);border-color:rgba(96,165,250,.35);color:#93c5fd}
+.key.fL1{background:rgba(96,165,250,.1);border-color:rgba(96,165,250,.25);color:#bfdbfe}
+.key.fL2{background:rgba(129,140,248,.1);border-color:rgba(129,140,248,.25);color:var(--accent2)}
+.key.fL3{background:rgba(167,139,250,.1);border-color:rgba(167,139,250,.25);color:#c4b5fd}
+.key.fL4{background:rgba(192,132,252,.1);border-color:rgba(192,132,252,.25);color:#d8b4fe}
+.key.fR0{background:rgba(244,114,182,.15);border-color:rgba(244,114,182,.35);color:#f9a8d4}
+.key.fR1{background:rgba(244,114,182,.1);border-color:rgba(244,114,182,.25);color:#fbcfe8}
+.key.fR2{background:rgba(251,113,133,.1);border-color:rgba(251,113,133,.25);color:#fca5a5}
+.key.fR3{background:rgba(251,146,60,.1);border-color:rgba(251,146,60,.25);color:var(--accent3)}
+.key.fR4{background:rgba(251,191,36,.1);border-color:rgba(251,191,36,.25);color:var(--yellow)}
+.key.fTh{background:rgba(52,211,153,.08);border-color:rgba(52,211,153,.2);color:var(--green)}
+.key.hl{transform:translateY(-3px);z-index:5;
+  box-shadow:0 6px 16px rgba(56,189,248,.4),0 0 0 2px var(--accent)!important;color:var(--accent)!important}
+.key.pressed{transform:translateY(2px);box-shadow:0 1px 0 var(--shadow);filter:brightness(1.5)}
+
+/* HANDS */
+.hands-wrap{display:flex;justify-content:center;gap:16px;margin-top:14px;padding-top:14px;border-top:1px solid var(--border)}
+.hand-svg{width:150px;height:100px}
+.hf{fill:var(--bg3);stroke:var(--border2);stroke-width:1.5;transition:fill .2s,stroke .2s}
+.hp{fill:var(--bg2);stroke:var(--border);stroke-width:1.5}
+.hf.alL{fill:rgba(96,165,250,.45);stroke:var(--left);stroke-width:2}
+.hf.alR{fill:rgba(244,114,182,.45);stroke:var(--right);stroke-width:2}
+.finger-guide{text-align:center;margin-top:10px;font-size:11px;
+  color:var(--muted2);font-family:'Fira Code',monospace}
+kbd{background:var(--bg3);border:1px solid var(--border2);border-radius:4px;
+  padding:2px 6px;font-family:'Fira Code',monospace;font-size:10px;
+  color:var(--muted2);box-shadow:0 2px 0 var(--border)}
+
+/* ===== TEACHER DASHBOARD ===== */
+.dash-wrap{padding:0}
+.dash-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:20px;flex-wrap:wrap;gap:10px}
+.dash-header h2{font-size:20px;font-weight:700}
+.dash-stats{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-bottom:20px}
+.dash-stat{background:var(--card);border:1px solid var(--border);border-radius:12px;
+  padding:14px;text-align:center;position:relative;overflow:hidden}
+.dash-stat::after{content:'';position:absolute;top:0;left:0;right:0;height:2px;
+  background:linear-gradient(90deg,var(--accent2),var(--accent))}
+.dash-sv{font-family:'Fira Code',monospace;font-size:28px;font-weight:600;color:var(--accent)}
+.dash-sl{font-size:11px;color:var(--muted);text-transform:uppercase;letter-spacing:1px;margin-top:3px}
+.student-table{background:var(--card);border:1px solid var(--border);border-radius:14px;overflow:hidden}
+.table-head{display:grid;grid-template-columns:1fr 1fr 80px 80px 80px 90px 90px;
+  gap:0;padding:12px 18px;background:var(--bg2);border-bottom:1px solid var(--border)}
+.th{font-size:11px;color:var(--muted);text-transform:uppercase;letter-spacing:1px;font-family:'Fira Code',monospace;font-weight:600}
+.table-body{max-height:420px;overflow-y:auto}
+.student-row{display:grid;grid-template-columns:1fr 1fr 80px 80px 80px 90px 90px;
+  gap:0;padding:12px 18px;border-bottom:1px solid var(--border);align-items:center;
+  transition:background .15s}
+.student-row:hover{background:var(--bg2)}
+.student-row:last-child{border-bottom:none}
+.s-name{display:flex;align-items:center;gap:8px}
+.s-avatar{width:30px;height:30px;border-radius:50%;
+  background:linear-gradient(135deg,var(--accent2),var(--accent));
+  display:flex;align-items:center;justify-content:center;
+  font-weight:700;font-size:12px;color:#fff;flex-shrink:0}
+.s-nm{font-size:13px;font-weight:600}
+.s-cls{font-size:10px;color:var(--muted2);font-family:'Fira Code',monospace}
+.td{font-size:13px;color:var(--text);font-family:'Fira Code',monospace}
+.wpm-badge{display:inline-block;padding:3px 10px;border-radius:20px;font-size:12px;font-weight:700;font-family:'Fira Code',monospace}
+.wpm-gold{background:rgba(251,191,36,.15);color:var(--yellow);border:1px solid rgba(251,191,36,.3)}
+.wpm-green{background:rgba(52,211,153,.15);color:var(--green);border:1px solid rgba(52,211,153,.3)}
+.wpm-blue{background:rgba(56,189,248,.15);color:var(--accent);border:1px solid rgba(56,189,248,.3)}
+.wpm-gray{background:var(--bg2);color:var(--muted2);border:1px solid var(--border)}
+.rank-badge{width:26px;height:26px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:700}
+.rank-1{background:rgba(251,191,36,.2);color:var(--yellow)}
+.rank-2{background:rgba(148,163,184,.2);color:#94a3b8}
+.rank-3{background:rgba(251,146,60,.2);color:var(--accent3)}
+.rank-n{background:var(--bg2);color:var(--muted2);font-size:10px}
+.no-students{text-align:center;padding:48px;color:var(--muted2);font-family:'Fira Code',monospace}
+
+/* ===== THEME CUSTOMIZER ===== */
+.theme-panel{
+  position:fixed;right:0;top:0;bottom:0;width:290px;
+  background:var(--bg2);border-left:1px solid var(--border);
+  z-index:200;padding:20px;overflow-y:auto;
+  transform:translateX(100%);transition:transform .3s ease;
+  box-shadow:-10px 0 40px var(--shadow);
+}
+.theme-panel.open{transform:translateX(0)}
+.tp-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:20px}
+.tp-header h3{font-size:15px;font-weight:700}
+.tp-close{background:none;border:none;color:var(--muted2);font-size:20px;cursor:pointer;padding:4px}
+.tp-close:hover{color:var(--text)}
+.tp-section{margin-bottom:20px}
+.tp-label{font-size:11px;color:var(--muted);text-transform:uppercase;letter-spacing:1px;
+  font-family:'Fira Code',monospace;margin-bottom:10px;display:block}
+.color-grid{display:grid;grid-template-columns:repeat(5,1fr);gap:7px}
+.color-swatch{
+  width:100%;aspect-ratio:1;border-radius:8px;cursor:pointer;
+  border:2.5px solid transparent;transition:all .2s;
+  position:relative;
+}
+.color-swatch.selected{border-color:#fff;transform:scale(1.1);
+  box-shadow:0 0 12px rgba(255,255,255,.3)}
+.color-swatch:hover{transform:scale(1.05)}
+.bg-preset{
+  padding:10px 12px;border-radius:9px;cursor:pointer;
+  border:1.5px solid var(--border);background:var(--bg3);
+  font-size:12px;font-weight:600;margin-bottom:6px;
+  display:flex;align-items:center;gap:8px;transition:all .2s;
+  color:var(--text);
+}
+.bg-preset:hover{border-color:var(--accent)}
+.bg-preset.selected{border-color:var(--accent);background:rgba(56,189,248,.08);color:var(--accent)}
+.bg-preview{width:20px;height:20px;border-radius:5px;flex-shrink:0}
+.tp-row{display:flex;align-items:center;justify-content:space-between;margin-bottom:10px}
+.tp-row label{font-size:13px;color:var(--text)}
+/* Toggle switch */
+.toggle{position:relative;width:44px;height:24px}
+.toggle input{opacity:0;width:0;height:0}
+.toggle-slider{position:absolute;inset:0;background:var(--border2);border-radius:24px;cursor:pointer;transition:.3s}
+.toggle-slider:before{content:'';position:absolute;height:18px;width:18px;left:3px;bottom:3px;
+  background:#fff;border-radius:50%;transition:.3s}
+.toggle input:checked + .toggle-slider{background:var(--accent)}
+.toggle input:checked + .toggle-slider:before{transform:translateX(20px)}
+/* Font size slider */
+.range-input{width:100%;accent-color:var(--accent);cursor:pointer}
+
+/* RESULT OVERLAY */
+.result-overlay{display:none;position:fixed;inset:0;
+  background:rgba(8,12,20,.92);backdrop-filter:blur(12px);
+  z-index:300;align-items:center;justify-content:center}
+.result-overlay.show{display:flex;animation:fadeIn .4s}
+@keyframes fadeIn{from{opacity:0;transform:scale(.95)}to{opacity:1;transform:scale(1)}}
+.result-card{background:var(--card);border:1px solid var(--border);
+  border-radius:22px;padding:40px 36px;max-width:440px;width:90%;
+  text-align:center;position:relative;overflow:hidden;
+  box-shadow:0 30px 80px var(--shadow)}
+.result-card::before{content:'';position:absolute;top:0;left:0;right:0;height:3px;
+  background:linear-gradient(90deg,var(--accent2),var(--accent),var(--accent3))}
+.res-emoji{font-size:54px;display:block;animation:bounceIn .5s;margin-bottom:10px}
+@keyframes bounceIn{0%{transform:scale(0)}60%{transform:scale(1.2)}100%{transform:scale(1)}}
+.res-title{font-size:24px;font-weight:800;color:var(--accent);margin-bottom:5px}
+.res-sub{color:var(--muted2);font-family:'Fira Code',monospace;font-size:12px;margin-bottom:24px}
+.res-stats{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-bottom:24px}
+.res-stat{background:var(--bg2);border:1px solid var(--border);border-radius:10px;padding:12px 8px}
+.rs-v{font-family:'Fira Code',monospace;font-size:22px;font-weight:600;color:var(--accent)}
+.rs-l{font-size:10px;color:var(--muted);text-transform:uppercase;letter-spacing:1px;margin-top:3px}
+.done-badge{display:inline-flex;align-items:center;gap:5px;
+  background:rgba(52,211,153,.12);border:1px solid rgba(52,211,153,.3);
+  color:var(--green);font-size:11px;border-radius:20px;padding:4px 12px;margin-bottom:14px;
+  font-family:'Fira Code',monospace}
+
+/* Toast */
+.toast{
+  position:fixed;bottom:24px;right:24px;z-index:500;
+  background:var(--card);border:1px solid var(--border);
+  border-radius:12px;padding:14px 18px;
+  font-size:13px;font-weight:600;
+  box-shadow:0 10px 40px var(--shadow);
+  transform:translateY(80px);opacity:0;
+  transition:all .3s;pointer-events:none;
+}
+.toast.show{transform:translateY(0);opacity:1}
+.toast.success{border-color:var(--green);color:var(--green)}
+.toast.error{border-color:var(--red);color:var(--red)}
+
+/* Scrollbar */
+::-webkit-scrollbar{width:5px}
+::-webkit-scrollbar-track{background:var(--bg)}
+::-webkit-scrollbar-thumb{background:var(--border2);border-radius:3px}
+
+/* Responsive */
+@media(max-width:860px){
+  .sidebar{transform:translateX(-100%)}
+  .main,.dash-wrap{margin-left:0;max-width:100vw;padding:16px}
+  .stats-row,.dash-stats{grid-template-columns:repeat(2,1fr)}
+  .table-head,.student-row{grid-template-columns:1fr 1fr 70px 70px 70px}
+  .keyboard{transform:scale(.78);transform-origin:top center}
+}
+</style>
+</head>
+<body>
+
+<!-- ======================================================
+     PAGE 1: REGISTRATION
+====================================================== -->
+<div class="page active" id="pageReg">
+<div class="reg-wrap">
+<div class="reg-card">
+  <button class="theme-toggle-reg" onclick="toggleTheme()" title="Dark/Light">🌙</button>
+  <div class="reg-logo">
+    <span class="icon">⌨️</span>
+    <h1>TypingMaster KH</h1>
+    <p>v3.0 · Beginner → King</p>
+  </div>
+  <div class="form-tabs">
+    <button class="form-tab active" onclick="switchFormTab('student',this)">🎓 សិស្ស Student</button>
+    <button class="form-tab" onclick="switchFormTab('teacher',this)">👨‍🏫 គ្រូ Teacher</button>
+  </div>
+
+  <!-- STUDENT FORM -->
+  <div id="studentForm">
+    <div class="form-group">
+      <label>👤 ឈ្មោះ Full Name *</label>
+      <input type="text" id="regName" class="form-input" placeholder="ខ្ញុំ ... / Your Name">
+    </div>
+    <div class="form-group">
+      <label>🏫 ថ្នាក់ / Class *</label>
+      <select id="regClass" class="form-input">
+        <option value="">-- ជ្រើស ថ្នាក់ --</option>
+        <option>ថ្នាក់ ១</option><option>ថ្នាក់ ២</option><option>ថ្នាក់ ៣</option>
+        <option>ថ្នាក់ ៤</option><option>ថ្នាក់ ៥</option><option>ថ្នាក់ ៦</option>
+        <option>Grade 7</option><option>Grade 8</option><option>Grade 9</option>
+        <option>Grade 10</option><option>Grade 11</option><option>Grade 12</option>
+        <option>University Year 1</option><option>University Year 2</option>
+        <option>University Year 3</option><option>University Year 4</option>
+        <option>Professional</option><option>Other</option>
+      </select>
+    </div>
+    <div class="form-group">
+      <label>🌐 ភាសា Language</label>
+      <select id="regLang" class="form-input">
+        <option value="en">🇬🇧 English</option>
+        <option value="km">🇰🇭 ភាសាខ្មែរ</option>
+        <option value="code">💻 Code</option>
+      </select>
+    </div>
+    <button class="btn-full" onclick="studentLogin()">🚀 ចូល / Start</button>
+    <div class="reg-divider">or</div>
+    <div style="text-align:center;font-size:12px;color:var(--muted2)">
+      ជ្រើស <strong style="color:var(--accent)">Teacher</strong> ដើម្បីមើល Dashboard
+    </div>
+  </div>
+
+  <!-- TEACHER FORM -->
+  <div id="teacherForm" style="display:none">
+    <div class="form-group">
+      <label>👨‍🏫 ឈ្មោះ គ្រូ Teacher Name *</label>
+      <input type="text" id="tName" class="form-input" placeholder="Teacher Name">
+    </div>
+    <div class="form-group">
+      <label>🔑 Password (default: teacher123)</label>
+      <input type="password" id="tPass" class="form-input" placeholder="••••••••">
+    </div>
+    <button class="btn-full" onclick="teacherLogin()">👨‍🏫 Teacher Dashboard</button>
+    <div style="margin-top:12px;text-align:center;font-size:11px;color:var(--muted2)">
+      Default password: <code style="color:var(--accent)">teacher123</code>
+    </div>
+  </div>
+</div>
+</div>
+</div>
+
+<!-- ======================================================
+     PAGE 2: MAIN APP
+====================================================== -->
+<div class="page" id="pageApp">
+<div class="app">
+<!-- SIDEBAR -->
+<aside class="sidebar">
+  <div class="sidebar-logo">
+    <div class="logo-row">
+      <div class="logo-icon">⌨️</div>
+      <div class="logo-info">
+        <div class="logo-title">TypingMaster</div>
+        <div class="logo-sub">KH · v3.0</div>
+      </div>
+    </div>
+    <div class="user-badge" id="userBadge">
+      <div class="user-avatar" id="userAvatar">?</div>
+      <div class="user-info">
+        <div class="user-name" id="userNameBadge">Student</div>
+        <div class="user-class" id="userClassBadge">Class</div>
+      </div>
+    </div>
+  </div>
+  <div class="sidebar-nav">
+    <div class="nav-label">ម៉ឺនុយ Menu</div>
+    <button class="nav-btn active" id="navTyping" onclick="showPanel('typing')"><span class="nav-icon">⌨️</span>វាយអក្សរ</button>
+    <button class="nav-btn" id="navTheme" onclick="openThemePanel()"><span class="nav-icon">🎨</span>តុបតែង Theme</button>
+    <button class="nav-btn" onclick="toggleTheme()"><span class="nav-icon" id="themeIcon">🌙</span><span id="themeLabel">ជប់ / Dark</span></button>
+    <button class="nav-btn" onclick="logout()"><span class="nav-icon">🚪</span>ចេញ Logout</button>
+    <div class="nav-label" style="margin-top:8px">មេរៀន Lessons</div>
+  </div>
+  <div class="lesson-section" id="lessonList"></div>
+</aside>
+
+<!-- MAIN -->
+<main class="main" id="mainContent">
+  <!-- TOPBAR -->
+  <div class="topbar">
+    <div class="topbar-left">
+      <h2 id="lessonHeading">មេរៀន ១</h2>
+      <p id="lessonDesc">Home Row ASDF JKL;</p>
+    </div>
+    <div class="topbar-right">
+      <div style="display:flex;background:var(--bg2);border:1px solid var(--border);border-radius:9px;padding:3px">
+        <button class="icon-btn active-btn" id="lbEN" onclick="switchLang('en',this)" style="border:none;border-radius:7px">🇬🇧 EN</button>
+        <button class="icon-btn" id="lbKM" onclick="switchLang('km',this)" style="border:none;border-radius:7px">🇰🇭 KH</button>
+        <button class="icon-btn" id="lbCode" onclick="switchLang('code',this)" style="border:none;border-radius:7px">💻 Code</button>
+      </div>
+      <button class="icon-btn" onclick="cycleTimer()">⏱ <span id="timerLabel">60s</span></button>
+    </div>
+  </div>
+
+  <!-- STATS -->
+  <div class="stats-row">
+    <div class="stat-card"><div class="stat-val" id="wpmVal">0</div><div class="stat-lbl">WPM</div></div>
+    <div class="stat-card"><div class="stat-val" id="accVal">100%</div><div class="stat-lbl">Accuracy</div></div>
+    <div class="stat-card"><div class="stat-val" id="errVal">0</div><div class="stat-lbl">Errors</div></div>
+    <div class="stat-card"><div class="stat-val" id="timeVal" style="font-size:20px">⏱ <span id="timerLeft">60</span>s</div><div class="stat-lbl">Time</div></div>
+  </div>
+
+  <!-- PROGRESS -->
+  <div class="prog-wrap"><div class="prog-fill" id="progBar" style="width:0%"></div></div>
+
+  <!-- TEXT DISPLAY -->
+  <div class="text-card" id="textCard">
+    <div class="lang-pill" id="langPill">ENGLISH</div>
+    <div class="display-text" id="displayText"></div>
+  </div>
+
+  <!-- WPM CHART -->
+  <div class="wpm-chart" id="wpmChart"></div>
+
+  <!-- INPUT -->
+  <div class="input-row" style="margin-top:10px">
+    <textarea class="typing-input" id="typingInput"
+      placeholder="ចុចទីនេះ ហើយចាប់ផ្តើមវាយ... Click here to start typing..."
+      rows="2" spellcheck="false" autocomplete="off" autocorrect="off" autocapitalize="off"></textarea>
+    <button class="icon-btn" onclick="clearInput()">✕</button>
+  </div>
+
+  <!-- CONTROLS -->
+  <div class="ctrl-row">
+    <button class="btn btn-primary" onclick="newText()">🔀 អត្ថបទថ្មី</button>
+    <button class="btn btn-ghost" onclick="restartCurrent()">↺ ម្ដងទៀត</button>
+    <button class="btn btn-warn" onclick="resetAll()">⊘ Reset</button>
+    <div style="flex:1"></div>
+    <button class="btn btn-ghost" onclick="prevLesson()">◀</button>
+    <button class="btn btn-ghost" onclick="nextLesson()">▶ បន្ទាប់</button>
+  </div>
+  <div style="display:flex;gap:12px;font-family:'Fira Code',monospace;font-size:11px;color:var(--muted);flex-wrap:wrap">
+    <span><kbd>Tab</kbd> New</span><span><kbd>Esc</kbd> Reset</span><span><kbd>Ctrl</kbd>+<kbd>→</kbd> Next Lesson</span>
+  </div>
+
+  <!-- KEYBOARD -->
+  <div class="kb-section">
+    <div class="kb-header">
+      <div class="kb-title">🖐 គំរូដៃ · Hand Guide</div>
+      <div class="kb-legend">
+        <span class="leg-item"><span class="leg-dot" style="background:rgba(96,165,250,.7)"></span>ឆ្វេង</span>
+        <span class="leg-item"><span class="leg-dot" style="background:rgba(244,114,182,.7)"></span>ស្ដាំ</span>
+        <span class="leg-item"><span class="leg-dot" style="background:var(--home)"></span>Home</span>
+        <span class="leg-item"><span class="leg-dot" style="background:var(--accent)"></span>Next Key</span>
+      </div>
+    </div>
+    <div class="keyboard" id="keyboard"></div>
+    <div class="hands-wrap">
+      <svg class="hand-svg" viewBox="0 0 150 100">
+        <path class="hp" d="M28 78 Q24 56 28 42 Q33 28 42 28 L108 28 Q113 28 113 42 L113 78 Q108 94 70 96 Q36 96 28 78Z"/>
+        <rect class="hf" id="lf0" x="26" y="9" width="17" height="30" rx="8"/>
+        <rect class="hf" id="lf1" x="46" y="4" width="17" height="34" rx="8"/>
+        <rect class="hf" id="lf2" x="67" y="2" width="17" height="36" rx="8"/>
+        <rect class="hf" id="lf3" x="87" y="5" width="17" height="34" rx="8"/>
+        <ellipse class="hf" id="lf4" cx="112" cy="84" rx="13" ry="9" transform="rotate(-28 112 84)"/>
+        <text x="62" y="62" fill="var(--accent)" font-size="7" font-weight="bold" font-family="Fira Code" text-anchor="middle">LEFT</text>
+      </svg>
+      <svg class="hand-svg" viewBox="0 0 150 100">
+        <path class="hp" d="M122 78 Q126 56 122 42 Q117 28 108 28 L42 28 Q37 28 37 42 L37 78 Q42 94 80 96 Q114 96 122 78Z"/>
+        <ellipse class="hf" id="rf4" cx="38" cy="84" rx="13" ry="9" transform="rotate(28 38 84)"/>
+        <rect class="hf" id="rf3" x="46" y="5" width="17" height="34" rx="8"/>
+        <rect class="hf" id="rf2" x="66" y="2" width="17" height="36" rx="8"/>
+        <rect class="hf" id="rf1" x="87" y="4" width="17" height="34" rx="8"/>
+        <rect class="hf" id="rf0" x="107" y="9" width="17" height="30" rx="8"/>
+        <text x="88" y="62" fill="var(--right)" font-size="7" font-weight="bold" font-family="Fira Code" text-anchor="middle">RIGHT</text>
+      </svg>
+    </div>
+    <div class="finger-guide" id="fingerGuide">🏠 Home: <kbd>A</kbd><kbd>S</kbd><kbd>D</kbd><kbd>F</kbd> — <kbd>J</kbd><kbd>K</kbd><kbd>L</kbd><kbd>;</kbd> · F &amp; J មានសសរ</div>
+  </div>
+</main>
+</div>
+</div>
+
+<!-- ======================================================
+     PAGE 3: TEACHER DASHBOARD
+====================================================== -->
+<div class="page" id="pageTeacher">
+<div class="app">
+<aside class="sidebar">
+  <div class="sidebar-logo">
+    <div class="logo-row">
+      <div class="logo-icon">👨‍🏫</div>
+      <div class="logo-info">
+        <div class="logo-title">Teacher</div>
+        <div class="logo-sub">Dashboard · v3.0</div>
+      </div>
+    </div>
+    <div class="user-badge">
+      <div class="user-avatar">T</div>
+      <div class="user-info">
+        <div class="user-name" id="teacherNameBadge">Teacher</div>
+        <div class="user-class">Administrator</div>
+      </div>
+    </div>
+  </div>
+  <div class="sidebar-nav">
+    <div class="nav-label">ម៉ឺនុយ</div>
+    <button class="nav-btn active" onclick="showTeacherPanel('overview')"><span class="nav-icon">📊</span>ទិដ្ឋភាពទូទៅ</button>
+    <button class="nav-btn" onclick="showTeacherPanel('students')"><span class="nav-icon">👥</span>សិស្ស List</button>
+    <button class="nav-btn" onclick="showTeacherPanel('ranking')"><span class="nav-icon">🏆</span>ចំណាត់ Rank</button>
+    <button class="nav-btn" onclick="toggleTheme()"><span class="nav-icon" id="themeIcon2">🌙</span>ជប់/ថ្ងៃ</button>
+    <button class="nav-btn" onclick="openThemePanel()"><span class="nav-icon">🎨</span>Theme</button>
+    <button class="nav-btn" onclick="clearAllStudents()"><span class="nav-icon">🗑</span>Clear Data</button>
+    <button class="nav-btn" onclick="logout()"><span class="nav-icon">🚪</span>Logout</button>
+  </div>
+</aside>
+<main class="main" id="teacherMain">
+  <div class="dash-header">
+    <div>
+      <h2>📊 Teacher Dashboard</h2>
+      <p style="font-size:13px;color:var(--muted2);margin-top:4px">ស្ថានភាពការ វាយអក្សររបស់ សិស្សទាំងអស់</p>
+    </div>
+    <div style="display:flex;gap:8px">
+      <button class="btn btn-ghost" onclick="exportCSV()">📥 Export CSV</button>
+      <button class="btn btn-ghost" onclick="refreshDash()">🔄 Refresh</button>
+    </div>
+  </div>
+  <div class="dash-stats">
+    <div class="dash-stat"><div class="dash-sv" id="dTotal">0</div><div class="dash-sl">Total Students</div></div>
+    <div class="dash-stat"><div class="dash-sv" id="dAvgWpm">0</div><div class="dash-sl">Avg WPM</div></div>
+    <div class="dash-stat"><div class="dash-sv" id="dAvgAcc">0%</div><div class="dash-sl">Avg Accuracy</div></div>
+    <div class="dash-stat"><div class="dash-sv" id="dTopWpm">0</div><div class="dash-sl">Top WPM</div></div>
+  </div>
+  <!-- Filter/Search bar -->
+  <div style="display:flex;gap:8px;margin-bottom:14px;flex-wrap:wrap">
+    <input type="text" id="searchInput" class="form-input" style="flex:1;min-width:180px"
+      placeholder="🔍 ស្វែងរក ឈ្មោះ..." oninput="renderStudentTable()">
+    <select id="filterClass" class="form-input" style="width:160px" onchange="renderStudentTable()">
+      <option value="">ថ្នាក់ទាំងអស់</option>
+    </select>
+    <select id="sortBy" class="form-input" style="width:140px" onchange="renderStudentTable()">
+      <option value="wpm">Sort: WPM ↓</option>
+      <option value="acc">Sort: Accuracy ↓</option>
+      <option value="name">Sort: Name A-Z</option>
+      <option value="time">Sort: Latest</option>
+    </select>
+  </div>
+  <div class="student-table">
+    <div class="table-head">
+      <div class="th">ឈ្មោះ Name</div>
+      <div class="th">ថ្នាក់ Class</div>
+      <div class="th">WPM</div>
+      <div class="th">Accuracy</div>
+      <div class="th">Errors</div>
+      <div class="th">Lesson</div>
+      <div class="th">Rank</div>
+    </div>
+    <div class="table-body" id="studentTableBody"></div>
+  </div>
+</main>
+</div>
+</div>
+
+<!-- THEME PANEL -->
+<div class="theme-panel" id="themePanel">
+  <div class="tp-header">
+    <h3>🎨 តុបតែង Theme</h3>
+    <button class="tp-close" onclick="closeThemePanel()">✕</button>
+  </div>
+
+  <div class="tp-section">
+    <span class="tp-label">🌗 Dark / Light Mode</span>
+    <div class="tp-row">
+      <label>Dark Mode 🌙</label>
+      <label class="toggle"><input type="checkbox" id="darkToggle" checked onchange="toggleTheme()"><span class="toggle-slider"></span></label>
+    </div>
+  </div>
+
+  <div class="tp-section">
+    <span class="tp-label">🎨 Accent Color</span>
+    <div class="color-grid" id="accentGrid"></div>
+  </div>
+
+  <div class="tp-section">
+    <span class="tp-label">🖼 Background Preset</span>
+    <div id="bgPresets"></div>
+  </div>
+
+  <div class="tp-section">
+    <span class="tp-label">🔤 Font Size អ្នក Text</span>
+    <input type="range" class="range-input" id="fontRange" min="14" max="26" value="19" oninput="changeFontSize(this.value)">
+    <div style="text-align:right;font-size:11px;color:var(--muted2);margin-top:4px"><span id="fontSizeLabel">19</span>px</div>
+  </div>
+
+  <div class="tp-section">
+    <span class="tp-label">⌨️ Keyboard Guide</span>
+    <div class="tp-row">
+      <label>Show Keyboard</label>
+      <label class="toggle"><input type="checkbox" id="kbToggle" checked onchange="toggleKb()"><span class="toggle-slider"></span></label>
+    </div>
+    <div class="tp-row">
+      <label>Show Hands</label>
+      <label class="toggle"><input type="checkbox" id="handToggle" checked onchange="toggleHands()"><span class="toggle-slider"></span></label>
+    </div>
+  </div>
+  <button class="btn btn-ghost" style="width:100%;margin-top:4px" onclick="resetTheme()">↺ Default Theme</button>
+</div>
+
+<!-- RESULT OVERLAY -->
+<div class="result-overlay" id="resultOverlay">
+<div class="result-card">
+  <div class="done-badge" id="doneBadge" style="display:none">✅ មេរៀនបញ្ចប់!</div>
+  <span class="res-emoji" id="resEmoji">🎉</span>
+  <div class="res-title" id="resTitle">ល្អណាស់!</div>
+  <div class="res-sub" id="resSub">Great job!</div>
+  <div class="res-stats">
+    <div class="res-stat"><div class="rs-v" id="rWpm">0</div><div class="rs-l">WPM</div></div>
+    <div class="res-stat"><div class="rs-v" id="rAcc">0%</div><div class="rs-l">Accuracy</div></div>
+    <div class="res-stat"><div class="rs-v" id="rTime">0s</div><div class="rs-l">Time</div></div>
+  </div>
+  <div style="display:flex;gap:7px;justify-content:center;flex-wrap:wrap">
+    <button class="btn btn-primary" onclick="closeResult();nextLesson()">▶ មេរៀនបន្ទាប់</button>
+    <button class="btn btn-ghost" onclick="closeResult();restartCurrent()">↺ ម្ដងទៀត</button>
+    <button class="btn btn-ghost" onclick="closeResult()">✕ Close</button>
+  </div>
+</div>
+</div>
+
+<!-- TOAST -->
+<div class="toast" id="toast"></div>
+
+<script>
+// ============================================================
+// LESSONS DATA — 20 Lessons
+// ============================================================
+const LESSONS = [
+  {id:1,group:'beginner',gc:'#60a5fa',title:'Home Row',desc:'ASDF JKL; · ចុច F/J មានសសរ',keys:['a','s','d','f','j','k','l',';'],
+    texts:{
+      en:['asdf jkl; asdf jkl; asdf jkl;','fj fj fj dk dk sl sl aa ss dd ff','asd fgh jkl; ask fad jab lag fall','all fall shall ask lads flask glass','sad lass; glad lad; shall ask dad','add flask; fall glass; ask a lass','fall; hall; call; wall; ball; tall','dad had a flask; a lad shall fall','ask all lads; fall; shall; glass all','alfa dusk flask; slab glad fall','jab jab jab; fad fad fad; lad lad','as a lad; dad shall fall; ask all','fjfj dkdk slsl aaa sss ddd fff jjj','add a flag; ask a lass; sad dads','fall glass lass ask flask glad hall'],
+      km:['ក ស ត ន ក ស ត ន ក ស ត ន','ការ នាំ ដល់ ក្នុង ការ ធ្វើ ការ','ដៃ ឆ្វេង ដៃ ស្ដាំ ដៃ ឆ្វេង ដៃ','ការ ធ្វើ ការ ល្អ ក្នុង ជីវិត','ស្នេហ៍ ជាតិ ខ្មែរ ណាស់ ណាស់','ខ្ញុំ ស្រលាញ់ ការ រៀន វាយ','ការ វាយ អក្សរ ល្អ ចាំបាច់ ណាស់','ដៃ ស្ដាំ ដាក់ លើ J K L ;','ដៃ ឆ្វេង ដាក់ លើ A S D F','ការ ខំ រៀន នឹង ជួយ អ្នក ជោគ','ជំនាញ វាយ ចាំ ការ ហ្វឹក ហ្វឺន','ខំ ព្យាយាម ជា រៀង រាល់ ថ្ងៃ','ការ ចង់ បាន ជំនាញ ត្រូវ ខំ','ដៃ ត្រឹម ត្រូវ ជួយ ឱ្យ លឿន','ខំ ហ្វឹក ហ្វឺន ការ វាយ ជំ'],
+      code:['a = 1; b = 2; c = a + b','if a: pass else: fail','data = {}; flag = False','def add(a, b): return a + b','a = []; s = {}; d = 0','for j in data: if k: skip(l)','ask = lambda a: a if a else False','a += 1; b -= 2; c *= 3','assert a == b; assert c != d','if flag: add(a, b) else: skip()','a, b = b, a; c, d = d, c','result = a if a > b else b','data = [a, b, c, d, e, f]','for i, j in zip(a, b): pass','class Add: def call(self): pass']
+    }
+  },
+  {id:2,group:'beginner',gc:'#60a5fa',title:'+ E I',desc:'E (ម្រាមមេ) · I (ម្រាមមេស្ដាំ)',keys:['a','s','d','f','j','k','l',';','e','i'],
+    texts:{
+      en:['if idle else fail side like idea','lead feel feed aide silk kale isle','a safe idea led kids like a lake','like silk; feel diesel; aide ideal','side aisle; idea fades; like life','feed a kid; feel ideal; like fake','idea lake; field said; if idle aid','slide sail; field aide; inside kale','a lake side; if life is ideal feel','like a seal; as if a field is real','a fake idea; side effect; like less','inside a diesel field; feel ideal','silk sail laid aside; life feels','a side isle; life aside; feel it','kids feel safe; ideal life; silk'],
+      km:['ការ រៀន វាយ ជា ជំនាញ ល្អ','ខ្ញុំ ចូលចិត្ត រៀន វាយ អក្សរ','ការ ខំ ប្រឹង ជួយ ឱ្យ ជោគ ជ័យ','ជីវិត ល្អ ចាំបាច់ ការ ខំ','ការ ស្ដាប់ គ្រូ ជួយ ឱ្យ ប្រសើរ','ដៃ ខ្ញុំ ដាក់ ត្រូវ លើ គ្រាប់','ការ ចង់ បាន ត្រូវ ខំ ខ្លាំង','ជំនាញ ល្អ ចាំ ការ ហ្វឹក ហ្វឺន','ការ ស្ងប់ ស្ងាត់ ល្អ ចំពោះ ការ','ដៃ ទំនេរ ជួយ ឱ្យ វាយ លឿន','ការ ផ្ចង់ ចិត្ត ជួយ ឱ្យ ត្រឹម','ខ្ញុំ ចូល ចិត្ត ការ វាយ លឿន','ពេល ខំ ពេល នោះ ជោគ ជ័យ','ចូលចិត្ត ការ សិក្សា ជំ ថ្មី','ស្ដាំ ឆ្វេង ដៃ ក្ដៅ លឿន ជ្រៅ'],
+      code:['if i: else: fail = 0; idle = 1','while idle: if side: break','fields = [i for i in data if i]','idea = lambda s: s.split(",")','if life.is_ideal(): feel_safe()','slide = list(filter(None, data))','if kale in isle: feed(side)','ideal = {"life": i, "idea": j}','def feel(self): return self.i()','silk = ["a","i","e","s","d","f"]','if fail: raise IdleError("side")','i = 0; while i < 10: i += 1','aide = dict(zip(fields, sides))','for i, j in enumerate(ideas): p','is_ideal = lambda x: x in fields']
+    }
+  },
+  {id:3,group:'beginner',gc:'#60a5fa',title:'+ G H',desc:'G H ម្រាមស្នាម',keys:['a','s','d','f','j','k','l',';','g','h'],
+    texts:{
+      en:['glad hash half glad dash hall lag','glad half hash hash half dash hall','has legs ask ghost flesh dash hash','high glad; half dash; had glass lag','legs heal; glad hash; flesh hall','shag lass; dash legs; high glad hall','has a half glass; lag dash; ghost','glad she had legs; half glass hash','flash dash; hall flag; high shelf','glad lag; shelf hash; she had half','high flash; a glad dash; leg hall','flash glad; half hall; she had legs','high glass shelf; glad dash hash','heal half; ash dash; flesh glad all','a ghost had half; glad leg; halls'],
+      km:['ចង ហើយ ហ្វឹក ហ្វឺន ជំហ ហ','ការ ហ្វឹក ហ្វឺន ជំ ណ ខ ប ការ','ហ្វ ហ ជំ ណ ខ ប ដ ហ ការ','ខំ ហ្វឹក ហ្វឺន ការ វាយ ជំ','ហ ចង ហ ជំ ការ ហ ប ណ ហ','ណ ហ ជំ ហ ការ ហ ប ណ ហ','ហ ណ ប ជំ ហ ការ ប ណ ហ','ហ ជំ ណ ប ហ ការ ណ ប ហ','ការ ណ ហ ប ជំ ហ ណ ប ហ','ណ ជំ ប ហ ការ ហ ណ ប ហ','ហ ប ណ ជំ ហ ការ ណ ប ហ','ជំ ហ ណ ប ហ ការ ណ ប ហ','ខំ ខ្លាំង ហ្វឹក ហ្វឺន ជំ ការ','ចំណុច ល្អ ជ្រើស ហ ហ្វ ជំ','ការ ហ្វឹក ហ ជំ ចំ ចំណុច'],
+      code:['gh = {}; hash = {}; flag = gh','def get_hash(key): return hash(k)','if flag: global_hash.add(gh)','high = lambda g, h: g + h','glad = {"hash": gh, "flag": True}','for g in graph: if h in g: ok','hash_table = {k:v for k,v in gh}','def flash(g): return g.hash()','half = gh.get("half", False)','shelf = [g for g in glad if h]','dash = hash(str(glad))','ghost = lambda g, h: {g: h}','hall = gh.update({"flag": False})','glads = list(filter(None, gh))','high_flag = all(g in gh for g in d)']
+    }
+  },
+  {id:4,group:'beginner',gc:'#60a5fa',title:'+ T Y',desc:'T Y ម្រាមស្នាម',keys:['t','y'],
+    texts:{
+      en:['try yet; duty tasty; stay type fast','today yesterday the typing style','stay fast; taste the duty today yet','the style today tasty fly type','yet duty fly stay the taste today','style taste fly yet today type','duty fly stay taste type today yet','today type fly style taste yet duty','taste the fly today yet duty style','type today taste yet fly style duty','stay the taste today yet type fly','fly today yet type style duty taste','yet today stay taste fly type duty','type style yet today fly taste stay','today the duty type stay fly taste'],
+      km:['ទ ជ ទ ជ ទ ជ ទ ជ ទ ជ ទ ជ','ជ ទ ជ ទ ជ ទ ជ ទ ជ ទ ជ','ការ ជ ទ ជ ទ ការ ជ ទ ជ ទ','ទ ជ ការ ជ ទ ជ ការ ជ ទ ជ','ជ ការ ទ ជ ការ ជ ទ ជ ការ','ទ ជ ការ ជ ទ ការ ជ ទ ជ ការ','ការ ជ ការ ទ ជ ការ ជ ទ ការ','ជ ការ ជ ការ ទ ជ ការ ជ ទ','ទ ជ ទ ការ ជ ទ ជ ការ ជ ទ','ជ ទ ជ ការ ជ ទ ជ ការ ជ ការ','ការ ជ ទ ជ ការ ជ ទ ជ ការ','ជ ទ ជ ការ ជ ទ ជ ការ ជ','ទ ជ ការ ជ ទ ជ ការ ជ ទ','ជ ការ ជ ទ ជ ការ ជ ទ ជ','ការ ទ ជ ការ ជ ទ ជ ការ ជ'],
+      code:['try: run(t, y) except: pass','type_it = lambda t: t.type()','if today: type_fast() else: try()','typedef = {"type": True, "yet": 1}','def fly(t, y): return t * y','today = datetime.today().strftime()','try: assert ty > 0 except: retry()','type_style = get_type(today, yet)','for t, y in zip(types, years): ok','if ty.type(): yield ty.today()','type_fn = types.TypeVar("ty")','yet_today = lambda t: t.run(today)','def stay_type(t, y): return t+y','try_type = [t for t in today if y]','type_today = dict(zip(t_list, y_l))']
+    }
+  },
+  {id:5,group:'beginner',gc:'#60a5fa',title:'+ Q W R',desc:'Q W R ជួរខាងលើ',keys:['q','w','r'],
+    texts:{
+      en:['we are here; ask a dark red deer','we were aware; ask a fresh flower','war drew fear; a weak dark sword wave','water tower; white flag; sewer rate','draw a red tree; where are the rest','the water was dark; we were afraid','a red flower grew; write a letter','trade war risk; the rate was great','three white trees; were we aware','write fast; red deer; flower water','the street was dark; we felt fear','a writer drew fast; the rest work','quest war red; where are we after','water rate rest; dark tree grew','faster writer; great white shark'],
+      km:['យើង ជាមួយ ដូច ដែរ ចូល','ការ ទៅ ណា ក្នុង ចន្លោះ ពេល','ចូល រៀន ការ ខំ ប្រឹង ដែរ','ទៅ ណា ការ ខំ ប្រឹង ចូល','ការ ទៅ ណា ចូល ការ ណែ','ការ រៀន ការ ណ ចូល ការ','ណ ការ ចូល ណ ការ ទៅ ណ','ប្រទេស ណ ចូល ណ ការ','ក្នុង ណ ការ ចូល ក ណ','ព្រះ ណ ជ ណ ការ ចូល ណ','ការ ណ ចូល ណ ជ ណ','ណ ការ ទ ណ ណ ការ ចូល','ការ ជ ណ ព ណ ការ ណ','ចូល ណ ការ ដ ណ ការ ណ','ណ ការ ចូល ណ ន ការ ណ'],
+      code:['while x: draw(x); req = walk()','def run(r): return r * rate','result = [i for i in range(10)]','try: req.get(url) except: retry()','write = open("file.txt", "w")','for row in table: write(row)','if rate > 0: return True else: err','tree = {"root": r, "left": w}','data.sort(key=lambda x: x["rate"])','req = requests.get(url, timeout=30)','with open("raw.txt") as f: read()','return [r for r in results if r]','rate = total / time if time > 0 else 0','str_data = "".join(str(r) for r)','write_to_db(table, rows, target)']
+    }
+  },
+  {id:6,group:'beginner',gc:'#60a5fa',title:'+ U O P',desc:'U O P ជួរខាងលើ',keys:['u','o','p'],
+    texts:{
+      en:['put your joy in typing; you enjoy','play upon your joy; type you must','your output looks good; type up joy','you type you play you joy you put','joy upon joy; you output your joy','type your joy; output you put up','your joy; your output; your type','joy you type; play your role well','put joy in your output; type up','you play your joy; output good type','output your joy; play your type up','type up joy; you play your output','joy your type your output you put','you output your joy and type up','you play your joy put output type'],
+      km:['ប ក យ ន ការ យ ប ក ជ','ប ណ ការ យ ន ជ ន ប ក','ការ ន ប យ ជ ន ក ប ច','ន ជ ប ក យ ការ ន ប ច','ជ ន យ ប ក ការ ន ប ច','ការ ន ប ជ យ ន ក ប ច','យ ន ក ប ជ ការ ន ប ច','ប ការ យ ន ជ ន ប ក ច','ន ប ការ ណ ជ ន ប ក ច','ន ក ប ជ ការ ន ប ច ក','ណ ជ ប ក ន ការ ន ប ច','ការ ន ប ជ ណ ន ក ប ច','ន ជ ប ន ណ ការ ន ប ច','ជ ណ ប ក ន ការ ន ប ច','ណ ន ប ជ ន ក ការ ន ប'],
+      code:['print(you, play, joy, output)','type_up = lambda y: y.upper()','output = [y for y in joy if y]','you = {"joy": True, "play": True}','joy_level = sum(output)/len(you)','if you.play(): output.put(joy)','for y in you: print(y.output())','put = you.get("joy", 0)','type_joy = you.type().play()','output_joy = map(str, your_list)','you.update({"output": joy})','joy_put = filter(None, output)','play_type = zip(you, output)','your_joy = dict(zip(put, type_up))','you_play = [y.joy for y in output]']
+    }
+  },
+  {id:7,group:'beginner',gc:'#60a5fa',title:'+ Z X C V B N M',desc:'ជួរក្រោម Row 3',keys:['z','x','c','v','b','n','m'],
+    texts:{
+      en:['mix zinc; back cave; venom box zinc','come back; cancel vibe; maxim zone','zinc box; back cave; venom cancel mix','back to basics; fix the next zoom call','men can mix zinc and come back now','cancel the vibe; fix zinc; come back','box the zinc venom; mix and cancel','zoom back; mix zinc; vibe and cancel','fix zinc vibe; back come zone men','cancel mix box; zinc men come back','vibe zone fix; men cancel zinc back','come mix zinc; cancel vibe box men','next zinc vibe; mix cancel come back','box zone cancel; vibe mix zinc men','men vibe zinc; fix box cancel come'],
+      km:['ន ម ន ម ន ម ន ម ន ម ន','ម ន ម ន ម ន ម ន ម ន ម','ការ ន ម ន ម ន ម ន ម ន','ន ម ការ ន ម ន ម ន ម ន','ម ន ន ម ន ការ ម ន ម ន','ន ម ន ការ ម ន ម ន ម ន','ម ន ម ន ការ ន ម ន ម ន','ន ម ន ម ន ម ការ ន ម ន','ម ន ម ន ម ន ម ការ ន ម','ន ម ន ម ន ម ន ម ការ ន','ម ន ម ន ម ន ម ន ម ន ម','ន ម ន ម ការ ន ម ន ម ន','ម ន ម ន ម ន ម ន ម ន','ន ម ន ម ន ម ន ម ន ការ','ម ន ម ន ម ន ម ន ម ន ម'],
+      code:['x = None; b = True; c = None','n = max(a, b); m = min(x, y)','def mix(a, b, c): return a+b+c','cancel = lambda x: not x','if not x: cancel(back=True)','box = {"zinc": n, "venom": m}','for n, m in zip(names, vals): ok','x, y, z = None, True, False','back_fn = lambda b: b.back()','next_val = max(x for x in zone)','mix_fn = filter(None, [x,y,z])','def vibe(n, m): return n * m','cancel_mix = {n: m for n,m in d}','back_zone = [n for n in mix if x]','max_box = reduce(max, zinc_vals)']
+    }
+  },
+  {id:8,group:'beginner',gc:'#60a5fa',title:'Full Alphabet',desc:'A-Z គ្រប់អក្សរ',keys:[],
+    texts:{
+      en:['the quick brown fox jumps over the lazy dog','pack my box with five dozen liquor jugs','how vexingly quick daft zebras jump','sphinx of black quartz judge my vow','the five boxing wizards jump quickly','crazy fredrick bought many very exquisite opals','quickly the brown fox jumps lazy zebra','we promptly judged antique ivory buckles','jack quietly moved up front seized the big ball','how quickly daft jumping zebras vex','we fix problems and quip black jumpy dove','jumpy fox bites quick wizard at vex','grumpy wizard quixotic jobs vex half dozen','amazingly few discotheques provide jukeboxes','a quivering jazzy fox leapt a big warm dog'],
+      km:['ប្រទេសកម្ពុជា មានប្រជាជន ស្នេហ៍ ជាតិ ណាស់','ខ្ញុំ ស្រលាញ់ ប្រទេស ខ្មែរ ណាស់ ណាស់','ការ អប់រំ ជា គ្រឹះ នៃ ការ អភិវឌ្ឍ ជាតិ','ប្រជាជន ខ្មែរ ចូល ចិត្ត ការ ជ្រើស រើស','ការ ខំ ប្រឹង ជួយ ឱ្យ ទទួល បាន ជោគ ជ័យ','ភ្នំពេញ ជា រដ្ឋ ធានី នៃ ប្រទេស កម្ពុជា','ជំនាញ ច្នៃ ប្រឌិត ជួយ ឱ្យ ជោគ ជ័យ','ការ ចូលចិត្ត ការ អប់រំ ជួយ ឱ្យ ចំណេះ','ប្រទេស ខ្មែរ មាន ប្រាសាទ ល្អ ឯក','ការ ធ្វើ ការ ល្អ ជួយ ឱ្យ ប្រទេស ចំរើន','ជំ ណ ខ ប ក ល ហ ការ ណ ប ដ','ការ ហ្វឹក ហ្វឺន ជំ ណ ខ ប ដ ការ','ជំ ណ ខ ប ក ល ហ ការ ណ ប','ការ ណ ប ដ ល ហ ខ ជំ ណ ប','ប ណ ការ ជំ ខ ហ ល ណ ប ដ'],
+      code:['function quickSort(arr){return arr.sort()}','const map = new Map(); map.set("k",v);','import {useState,useEffect} from "react";','const result = arr.filter(x=>x>0).map(x=>x*2);','async function getData(){return await fetch(url)}','class Animal{constructor(n){this.name=n;}}','const [data,setData] = useState(null);','export default function App(){return <div/>}','const obj = Object.fromEntries(map.entries());','try{JSON.parse(text)}catch(e){console.error(e)}','const x = arr.reduce((acc,val)=>acc+val,0);','for(let i=0;i<arr.length;i++){process(arr[i])}','const clone = JSON.parse(JSON.stringify(obj));','Promise.all([fetch(a),fetch(b)]).then(log)','const fn = (...args) => args.reduce((a,b)=>a+b)']
+    }
+  },
+  {id:9,group:'intermediate',gc:'#818cf8',title:'Numbers 0-9',desc:'ជួរលេខ Row 1-2-3...',keys:['1','2','3','4','5','6','7','8','9','0'],
+    texts:{
+      en:['123 456 7890 call 1-800-555-1234 now','type 42 words in 60 seconds flat','score: 100% on test 3 at 5:30 pm','order 24 items at $5.99 each today','chapter 7 page 300 line 45 column 2','born in 1980 now aged 44 in 2024','temperature is 36.5 at 9:00 am','box 1 has 50 items box 2 has 100','type at least 40 words per minute','version 3.14.2 released on 2024-01-15','10 + 20 = 30; 100 - 45 = 55; 7 x 8','address: 123 main st apt 4B zip 10001','code: 4521; pin: 0987; id: 654321','at 8:45 am 30 students joined room 201','call 012-345-6789 or 098-765-4321 now'],
+      km:['ឆ្នាំ ២០២៤ ១២ ខែ ៣៦៥ ថ្ងៃ','ប្រជាជន ខ្មែរ មាន ១៧ លាន នាក់','ថ្ងៃ ទី ១ ខែ ១ ឆ្នាំ ២០២៥','ក្រុង ភ្នំពេញ មាន ២ លាន ប្រជាជន','ចំណូល ២ ០០០ ដុល្លារ ក្នុង ១ ខែ','ឡើង ១ ០ % ក្នុង ១ ឆ្នាំ ២ ០','ក ២ ស ១ ណ ០ ប ៤ ជ ៥ ខ','ចំ ២ ០ ២ ៤ ១ ២ ខែ ៣ ០','ការ ១ ០ ០ % ក្នុង ១ ២ ខែ','ខ ១ ០ ណ ២ ការ ០ ជ ១ ០'],
+      code:['x = 12; y = 34; z = x * y + 567','for i in range(1, 100): sum += i','if port == 8080: listen(3000)','arr = [1, 2, 3, 4, 5, 6, 7, 8, 9]','timeout = 30; retry = 3; delay = 500','if len(data) > 100: paginate(50)','score = 95; pass_mark = 80','url = "http://api.local:5000/v2"','limit = 10; offset = 0; total = 1500','v1 = 3.14; v2 = 2.71; v3 = 1.41','date = "2024-01-15"; year = 2024','max_retry = 5; wait = 1000; tries=0','w, h = 1920, 1080; aspect = w/h','rgb = (255, 128, 0); hex="#FF8000"','lat = 11.5449; lng = 104.8922']
+    }
+  },
+  {id:10,group:'intermediate',gc:'#818cf8',title:'Punctuation',desc:'. , ! ? - _ ( ) [ ] { }',keys:[],
+    texts:{
+      en:["Hello, world! How are you? I'm fine.","Wait - are you sure? (Yes, I am!)",'Type: foo(bar), baz[0], x-y = z.',"It's not easy, is it? No, it's hard!",'Run: npm install --save-dev jest','error: undefined is not a function!',"She said, \"Hello!\" and smiled warmly.",'items: (a, b, c) sorted by [name].',"Don't stop! Keep going - you're close!",'call fn(x, y, z) with opts={a: true}','path: /home/user/docs/report-2024.pdf',"price: $9.99; discount: -20%; total: $7",'name_first, name_last = split(full)','regex: /^[a-z0-9]+@[a-z]+\\.[a-z]+$/i','key_map = {0: "zero", 1: "one", -1: "neg"}'],
+      km:['ប្រយ័ត្ន! ត្រឹម? ចំណាំ: ល្អ, ស្ងប់។','ខ្ញុំ ស្រឡាញ់ ប្រទេស ខ្មែរ!','ការ ខំ ប្រឹង (ជំ) ជ ជ ជ ជ','ខ្ញុំ? ការ! ខំ, ប្រឹង; ល្អ។','ជំ ខំ, ការ! ខ; ប ល ណ?','ណ! ការ? ខំ, ប ជំ ខ; ល។','ខ ប ណ, ជំ! ការ? ខំ; ល','ជំ! ណ? ខ, ការ; ប ល ខំ','ណ, ខ; ប! ជំ ការ? ខំ ល','ការ! ខំ? ប, ជំ; ណ ខ ល','ណ ខ ប ជំ! ការ ខំ ល?','ខំ ណ! ជំ ប, ការ ខ ល;','ជំ ខ ណ ប? ការ! ខំ ល.','ប ណ ខំ, ជំ ការ! ខ ណ?','ខ ជំ ណ ប! ការ ខំ ល.'],
+      code:['arr[0] = fn(x, y); // returns int','obj = {"key": "val", "num": 42}','if (x > 0 && y < 10) { return; }','fn = (a, b) => ({ sum: a + b });','url = f"https://{host}:{port}/api"','data.sort((a, b) => a.name-b.name);','raise ValueError("invalid: "+str(x))','path = os.path.join(base, "data")','!important; margin: 0; padding: 1rem','/* TODO */ x = x ?? default_val;','regex = /^[a-z0-9]+@[a-z]+\\.[a-z]+$/','#include <stdio.h>; int main() {}','try { fn() } catch(e) { log(e) }','key_map = {0:"zero", 1:"one", -1:"neg"}','const {a, b, ...rest} = obj; // spread']
+    }
+  },
+  {id:11,group:'intermediate',gc:'#818cf8',title:'Capitals Shift',desc:'Shift · អក្ខរធំ A-Z',keys:[],
+    texts:{
+      en:['Cambodia Is A Beautiful Country In Asia','Hello World! My Name Is Claude AI.','The Quick Brown Fox Jumps Over Dog','Python Java JavaScript TypeScript React','Monday Tuesday Wednesday Thursday Friday','January February March April May June','Paris London Tokyo New York Los Angeles','Apple Google Amazon Microsoft Facebook','HTML CSS JavaScript Node React NextJS','NASA ESA SpaceX Tesla OpenAI Anthropic',"Dr. Smith said Hello to Mr. Johnson.",'Lake Tonle Sap Is The Largest In Asia.','I Love Phnom Penh City Very Much!','Science Math English History Geography','King Norodom Sihamoni Rules Cambodia.'],
+      km:['ខ្ញុំ ស្រលាញ់ ប្រទេស ខ្មែរ ណាស់','ភ្នំពេញ ជា រដ្ឋ ធានី ល្អ ណាស់','ការ ខំ ប្រឹង ណ ណ ណ ណ ណ ណ','ការ ន ណ ជំ ណ ខ ណ ប ណ','ណ ខ ណ ជំ ណ ការ ណ ប ណ','ណ ន ណ ខ ណ ប ណ ជំ ណ','ករ ណ ខ ជំ ណ ប ណ ន ណ','ណ ជំ ខ ណ ការ ណ ប ណ ន','ណ ន ញ ណ ខ ណ ប ជំ ណ','ណ ប ណ ន ណ ជំ ខ ណ ការ','ណ ន ណ ប ខ ណ ជំ ណ ន','ខ ណ ប ណ ជំ ណ ន ណ ប','ណ ជំ ណ ខ ណ ប ណ ន ណ','ប ណ ន ណ ជំ ណ ខ ណ ប','ណ ន ណ ជំ ខ ណ ប ណ ន'],
+      code:['Class MyApp: PUBLIC static VOID main()','const API_URL = "https://API.EXAMPLE.COM";','enum Status { ACTIVE, INACTIVE, PENDING }','interface IUser { Name: string; Age: number; }','HTTP_OK = 200; HTTP_NOT_FOUND = 404;','SELECT Name, Age FROM Users WHERE Active=TRUE','export { MyComponent, MyHook, MyContext };','const ENV = process.env.NODE_ENV;','type Props = { Title: string; OnClick: Fn };','console.ERROR("FATAL: DB_CONNECT failed!");','const MAX_SIZE = 1024 * 1024 * 10; // 10MB','import React, { Component } from "React";','PHNOM_PENH_LAT = 11.5449; LONG = 104.89;','throw new TypeError("Invalid Input Type");','module.exports = { App, Server, Router };']
+    }
+  },
+  {id:12,group:'intermediate',gc:'#818cf8',title:'Common Words EN',desc:'ពាក្យ English ប្រចាំថ្ងៃ',keys:[],
+    texts:{
+      en:['the and for are but not what all were when','we have this from that with they which she','there their about would make time has look','two more write go see number no way could','people my than first water been call who','oil sit now find long down day did get','come made may part over new sound take only','little work know place years live back give','most very after things our just name good','sentence man think say great where help through','much before line right too means old any same','tell boy follow came want show also around','form three small set put end does another','well large must big even such because turned','here why asked went men read need land different'],
+      km:['ការ ថ្ងៃ ប្រជាជន ចូល ខ្ញុំ ការ ជំ','ជំ ការ ជំ ថ្ងៃ ប ណ ខ ជ ន','ករ ណ ជំ ខ ប ន ជ ណ ការ','ថ្ងៃ ណ ខ ប ជ ន ជំ ណ ករ','ន ជ ណ ជំ ថ្ងៃ ការ ខ ប ន','ប ន ករ ជ ណ ជំ ន ខ ថ្ងៃ','ការ ថ្ងៃ ន ប ជ ណ ខ ជំ','ន ជំ ណ ការ ជ ថ្ងៃ ប ន ខ','ខ ប ន ជ ណ ជំ ការ ថ្ងៃ','ជ ណ ខ ប ន ការ ជំ ថ្ងៃ','ណ ការ ជ ថ្ងៃ ន ប ខ ជំ','ប ជំ ណ ន ជ ថ្ងៃ ការ ខ','ជំ ណ ការ ជ ថ្ងៃ ប ន ខ','ករ ន ជ ណ ជំ ប ថ្ងៃ ខ','ន ខ ជ ណ ប ការ ជំ ថ្ងៃ'],
+      code:['const get = (obj, key) => obj[key]','const set = (obj, k, v) => ({...obj,[k]:v})','const has = (obj, k) => k in obj','const keys = obj => Object.keys(obj)','const vals = obj => Object.values(obj)','const merge = (...objs) => Object.assign({},...objs)','const pick = (obj, keys) => keys.reduce((o,k)=>({...o,[k]:obj[k]}),{})','const omit = (obj, keys) => Object.fromEntries(Object.entries(obj).filter(([k])=>!keys.includes(k)))','const sort = (arr, fn) => [...arr].sort(fn)','const uniq = arr => [...new Set(arr)]','const chunk = (arr, n) => Array.from({length:Math.ceil(arr.length/n)},(_,i)=>arr.slice(i*n,i*n+n))','const flat = arr => arr.flat(Infinity)','const sum = arr => arr.reduce((a,b)=>a+b,0)','const avg = arr => sum(arr)/arr.length','const max = arr => Math.max(...arr)']
+    }
+  },
+  {id:13,group:'intermediate',gc:'#818cf8',title:'Common Words KH',desc:'ពាក្យ ខ្មែរ ប្រចាំថ្ងៃ',keys:[],
+    texts:{
+      en:['Cambodian culture is rich and beautiful with ancient temples and traditions','The Angkor Wat temple complex is one of the greatest wonders of the world','Phnom Penh is the capital city of Cambodia located along the Mekong river','Khmer cuisine is famous for its unique flavors herbs and fragrant spices','The Tonle Sap lake is the largest freshwater lake in Southeast Asia region','Cambodia has a young population that is eager to learn and grow rapidly','The Khmer Rouge period was a dark chapter in Cambodian history and memory','Today Cambodia is rebuilding and growing as a modern developing nation','Technology and education are keys to Cambodias future prosperity and success','The Cambodian people are known for their kindness warmth and resilience'],
+      km:['ប្រទេសកម្ពុជាមានប្រវត្តិ វប្បធម៌ ដ៏ ចម្លែក ស្រស់ ស្អាត','ប្រាសាទ អង្គរ វត្ត ជា ស្នាដៃ ស្ថាបត្យ ករ ខ្មែរ','ភ្នំ ពេញ ជា រដ្ឋ ធានី នៃ ប្រទេស ខ្មែរ','ម្ហូប ខ្មែរ មាន រស ជាតិ ពិ ត ជា ឆ្ញាញ់','ទន្លេ សាប ជា បឹង ទឹក ផ្អែម ធំ ជាង','ប្រជាជន ខ្មែរ ជា ជំ នាន់ ក្មេង ក្លា ហាន','ការ អប់ រំ ជួយ ឱ្យ ប្រទេស ជាតិ ចំ រើន','បច្ចេក វិទ្យា ជួយ ឱ្យ ប្រទេស ចំ រើន','ការ ខំ ប្រឹង នឹង ជួយ ឱ្យ ជោគ ជ័យ','ប្រទេស ខ្មែរ ឈ្មោះ កម្ពុជា ស្ថិត អាស៊ី'],
+      code:['// Phnom Penh lat: 11.5449, lng: 104.8922','const kh = {capital: "Phnom Penh", pop: 17e6}','const angkor = {lat:13.4125,lng:103.8670}','const mekong = {length: 4350, unit: "km"}','const currency = "KHR"; const usd_rate = 4100;','const months_km = ["មករា","កុម្ភៈ","មីនា"]','const days_km = ["អាទិត្យ","ច័ន្ទ","អង្គារ"]','const khmer_num = ["\u17E0","\u17E1","\u17E2","\u17E3"]','const greeting = {hello: "ជំរាប​សួរ", bye: "លាហើយ"}','const food = ["បាយ","នំ","ស្ករ","ត្រី","ម៉ាន់"]']
+    }
+  },
+  {id:14,group:'advanced',gc:'#f472b6',title:'Speed 60+ WPM',desc:'ល្បឿន 60 WPM ឡើង',keys:[],
+    texts:{
+      en:['Practice makes perfect. The more you type every day, the faster and more accurate you will become over time.','Typing speed improves with consistent daily practice. Focus on accuracy first, then slowly build your speed.','A skilled typist can type more than 80 words per minute without ever looking down at the keyboard at all.','The keyboard is your instrument. Like a musician, you must practice every single day to truly master it.','Touch typing means you never look at the keyboard. Your fingers know exactly where every key is located.','Speed comes after accuracy. Never sacrifice correct typing just to type a little bit faster today.','Great typists are not born, they are made through hours and hours of deliberate and focused practice.','Your typing speed will plateau and then suddenly jump. Do not give up during the slow difficult periods.','Consistency beats intensity. Typing thirty minutes every day beats three hours once a week easily.','The goal is not just speed but accuracy. A fast but inaccurate typist is not very productive at all.','Every mistake teaches you something valuable. Pay attention to which keys you consistently miss or swap.','Challenge yourself with new and varied texts. Repeating the same sentence does not help much at all.','The home row is your base. Always return your fingers to ASDF and JKL after pressing any other key.','Learning to type properly takes time and great patience. Do not rush. Focus on each character carefully.','Keeping your wrists flat and your fingers curved helps you type faster with much less fatigue over time.'],
+      km:['ការខំប្រឹងប្រែងជារៀងរាល់ថ្ងៃ នឹងនាំឱ្យអ្នកទទួលបានជោគជ័យក្នុងជីវិត ។','ប្រទេសកម្ពុជាជាប្រទេសមួយក្នុងតំបន់អាស៊ីអាគ្នេយ៍ ដែលមានប្រវត្តិ វប្បធម៌ ស្រស់ស្អាត ។','ការអប់រំជាគ្រឹះសំខាន់នៃការអភិវឌ្ឍជាតិ ព្រោះវាបណ្ដុះបណ្ដាលជំនាន់ក្មេងឱ្យក្លាហាន ។','ការប្រើប្រាស់ទូរស័ព្ទ និងកុំព្យូទ័រ ផ្ដល់ភាពងាយស្រួលក្នុងការទំនាក់ទំនង ។','ក្ដីស្រមៃ និងការខំប្រឹងប្រែង ជាកត្តាពីរសំខាន់ ដែលនាំឱ្យប្រទេសជាតិចំរើន ។','ការចូលចិត្តការអានសៀវភៅ ជួយឱ្យយើងបង្កើនចំណេះដឹង និងពង្រីកការយល់ដឹង ។','ភ្នំពេញជារដ្ឋធានីដ៏ស្រស់ស្អាត ដែលមានភ្ញៀវទេសចរចូលមករាប់លានគ្នាជារៀងរាល់ឆ្នាំ ។','ការជ្រើសរើសការងារគួរផ្អែកលើចំណង់ចំណូលចិត្ត មិនមែនតែប្រាក់ចំណូលប៉ុណ្ណោះ ។','ការវាយអក្សរបានលឿន ជួយឱ្យយើងសន្សំពេលវេលា ធ្វើការបានកាន់តែប្រសើរ ។','ចំណេះដឹងជាទ្រព្យសម្បត្តិ ហើយគ្មាននរណាម្នាក់អាចលួចចំណេះដឹងរបស់អ្នកបានឡើយ ។'],
+      code:['const debounce=(fn,ms)=>{let t;return(...a)=>{clearTimeout(t);t=setTimeout(()=>fn(...a),ms);}};','const memoize=fn=>{const c=new Map();return(...a)=>{const k=JSON.stringify(a);return c.has(k)?c.get(k):c.set(k,fn(...a)).get(k);}};','function* range(s=0,e=Infinity,step=1){for(let i=s;i<e;i+=step)yield i;}','const pipe=(...fns)=>x=>fns.reduce((v,f)=>f(v),x);','const flatten=arr=>arr.reduce((f,i)=>f.concat(Array.isArray(i)?flatten(i):i),[]);','const groupBy=(arr,fn)=>arr.reduce((g,i)=>{const k=fn(i);(g[k]=g[k]||[]).push(i);return g;},{});','const retry=(fn,n=3)=>fn().catch(e=>n>1?retry(fn,n-1):Promise.reject(e));','const throttle=(fn,lim)=>{let l=0;return(...a)=>{const n=Date.now();if(n-l>=lim){l=n;return fn(...a);}};};','const curry=fn=>(...a)=>a.length>=fn.length?fn(...a):curry(fn.bind(null,...a));','const zip=(...arrays)=>arrays[0].map((_,i)=>arrays.map(a=>a[i]));','const deepEqual=(a,b)=>JSON.stringify(a)===JSON.stringify(b);','const omit=(obj,keys)=>Object.fromEntries(Object.entries(obj).filter(([k])=>!keys.includes(k)));','const pick=(obj,keys)=>keys.reduce((o,k)=>({...o,[k]:obj[k]}),{});','const once=fn=>{let c,r;return(...a)=>c?r:(c=true,r=fn(...a));};','const clamp=(n,min,max)=>Math.min(Math.max(n,min),max);']
+    }
+  },
+  {id:15,group:'advanced',gc:'#f472b6',title:'SQL & Commands',desc:'Database, Terminal',keys:[],
+    texts:{
+      en:['SELECT * FROM users WHERE active = 1 ORDER BY created_at DESC LIMIT 10;','INSERT INTO orders (user_id, product_id, qty, price) VALUES (1, 42, 3, 9.99);','UPDATE users SET last_login = NOW(), login_count = login_count + 1 WHERE id = ?;','DELETE FROM sessions WHERE expires_at < NOW() AND user_id NOT IN (SELECT id FROM active);','ALTER TABLE products ADD COLUMN discount DECIMAL(5,2) DEFAULT 0.00 AFTER price;','CREATE INDEX idx_user_email ON users (email) WHERE deleted_at IS NULL;','SELECT u.name, COUNT(p.id) posts FROM users u LEFT JOIN posts p ON u.id=p.user_id GROUP BY u.id;','git commit -m "feat: add keyboard typing trainer with lesson system"','npm install --save-dev webpack babel-loader @babel/core @babel/preset-env','docker run -d -p 3000:3000 --name app --env-file .env my-node-app:latest','kubectl apply -f deployment.yaml --namespace=production --dry-run=client','ssh -i ~/.ssh/prod.pem ubuntu@10.0.0.1 "sudo systemctl restart nginx"','terraform init && terraform plan -var-file=prod.tfvars -out=tfplan','grep -r "TODO" ./src --include="*.ts" | sort | uniq -c | sort -rn','find . -name "*.log" -mtime +7 -type f -exec rm -f {} \\;'],
+      km:['ការ SELECT ពី តារាង ដើម្បី ទទួល ទិន្នន័យ','ការ INSERT ទំនួលខុសត្រូវ ចូល ក្នុង ប្រព័ន្ធ','ការ UPDATE ទិន្នន័យ ត្រូវ ប្រយ័ត្ន','ការ DELETE ទិន្នន័យ ត្រូវ យក ចិត្ត ទុក','SQL JOIN LEFT RIGHT INNER OUTER','ការ INDEX ជួយ ឱ្យ ស្វែង រក លឿន','ការ ប្រើ Terminal ជា ជំ នាញ','git add commit push pull merge','npm yarn pnpm bun package manager','docker kubernetes container cloud','ការ deploy ទៅ server production','ការ backup database ជា ប្រចាំ','ការ monitor log error ជា ប្រចាំ','security scan vulnerability patch','ការ test unit integration e2e'],
+      code:['SELECT u.id,u.name,COUNT(o.id) orders,SUM(o.total) revenue FROM users u LEFT JOIN orders o ON o.user_id=u.id WHERE u.active=1 GROUP BY u.id HAVING revenue>1000 ORDER BY revenue DESC LIMIT 20;','CREATE OR REPLACE FUNCTION calc_wpm(chars INT, secs NUMERIC) RETURNS NUMERIC AS $$ BEGIN RETURN ROUND((chars::NUMERIC/5)/(secs/60),2); END; $$ LANGUAGE plpgsql;','WITH ranked AS (SELECT *, ROW_NUMBER() OVER(PARTITION BY class ORDER BY wpm DESC) rn FROM students) SELECT * FROM ranked WHERE rn <= 3;','GRANT SELECT,INSERT,UPDATE ON mydb.* TO "appuser"@"%" IDENTIFIED BY "pass123!";','CREATE TABLE typing_results (id SERIAL PRIMARY KEY, user_id INT REFERENCES users(id), wpm INT, accuracy DECIMAL, lesson_id INT, created_at TIMESTAMP DEFAULT NOW());','ALTER TABLE typing_results ADD INDEX idx_user_wpm (user_id, wpm DESC), ADD INDEX idx_lesson (lesson_id);','INSERT INTO typing_results (user_id, wpm, accuracy, lesson_id) VALUES (?, ?, ?, ?) ON DUPLICATE KEY UPDATE wpm=GREATEST(wpm,VALUES(wpm));','SELECT l.title, AVG(r.wpm) avg_wpm, AVG(r.accuracy) avg_acc, COUNT(r.id) attempts FROM lessons l JOIN typing_results r ON l.id=r.lesson_id GROUP BY l.id ORDER BY avg_wpm DESC;','EXPLAIN ANALYZE SELECT * FROM typing_results WHERE user_id=1 ORDER BY created_at DESC LIMIT 10;','SELECT DATE(created_at) date, AVG(wpm) daily_wpm FROM typing_results WHERE user_id=? GROUP BY DATE(created_at) ORDER BY date;']
+    }
+  },
+  {id:16,group:'advanced',gc:'#f472b6',title:'React & TypeScript',desc:'Modern Frontend Code',keys:[],
+    texts:{
+      en:['const [state, dispatch] = useReducer(reducer, {wpm: 0, acc: 100, errors: 0});','export const useDebounce = <T>(value: T, delay: number): T => { const [dVal, setDVal] = useState<T>(value); useEffect(()=>{ const t=setTimeout(()=>setDVal(value),delay); return ()=>clearTimeout(t); },[value,delay]); return dVal; };','type ApiResponse<T> = { data: T; status: number; message: string; timestamp: string; };','interface Repository<T extends {id:string}> { findById(id:string): Promise<T|null>; findAll(): Promise<T[]>; create(data:Omit<T,"id">): Promise<T>; }','const withRetry = <T>(fn:()=>Promise<T>, retries=3, delay=1000): Promise<T> => fn().catch(e=>retries>0?new Promise(r=>setTimeout(r,delay)).then(()=>withRetry(fn,retries-1,delay*2)):Promise.reject(e));','export default defineConfig({ plugins: [react()], server: { port: 3000 }, build: { outDir: "dist" } });','const schema = z.object({ name: z.string().min(2), age: z.number().min(18), email: z.string().email() });','import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";','const result = await db.transaction(async (trx) => { return trx("users").insert(data).returning("*"); });','const ws = new WebSocket("wss://api.example.com/ws"); ws.onmessage = e => dispatch(parse(e.data));','type DeepPartial<T> = T extends object ? { [P in keyof T]?: DeepPartial<T[P]> } : T;','const useLocalStorage = <T>(key:string, init:T):[T,(v:T)=>void]=>{const [v,setV]=useState<T>(()=>{try{return JSON.parse(localStorage.getItem(key)!);}catch{return init;}});return [v,v=>{setV(v);localStorage.setItem(key,JSON.stringify(v));}];};','export const createStore = (reducer, enhancer) => enhancer ? enhancer(createStore)(reducer) : { dispatch, getState, subscribe };','async function* asyncGen(items){for await(const item of items){yield await processItem(item);}}','const observeIntersection=(el,cb,opts)=>{const obs=new IntersectionObserver(cb,opts);obs.observe(el);return ()=>obs.unobserve(el);};'],
+      km:['ការ React TypeScript ជំ ន ជ ន ជ','ការ useState useEffect useReducer','ការ props state context hook','ការ component render lifecycle','ការ async await promise fetch','ការ API REST GraphQL WebSocket','ការ Redux Zustand Recoil Jotai','ការ TailwindCSS styled-components','ការ Vite Webpack NextJS Remix','ការ testing Jest Vitest Cypress','ការ deploy Vercel Netlify Docker','ការ CI/CD GitHub Actions Pipeline','ការ TypeScript types interfaces','ការ performance optimization memo','ការ accessibility a11y ARIA roles'],
+      code:['FROM node:20-alpine AS base; WORKDIR /app; COPY package*.json .; RUN npm ci;','COPY . .; RUN npm run build; EXPOSE 3000; CMD ["node","dist/server.js"]','resource "aws_ecs_service" "app" { name="app"; cluster=aws_ecs_cluster.main.id; desired_count=3; launch_type="FARGATE"; }','kubectl create secret generic db-creds --from-literal=user=admin --from-literal=pass=secret -n prod --dry-run=client -o yaml','pipeline { agent any; stages { stage("test"){ steps { sh "npm test" } } stage("build"){ steps { sh "npm run build" } } } }','terraform { required_providers { aws = { source="hashicorp/aws"; version="~>5.0" } } }','func (s *Server) ServeHTTP(w http.ResponseWriter,r *http.Request){ start:=time.Now(); defer func(){log.Printf("%s %s %v",r.Method,r.URL.Path,time.Since(start))}(); s.router.ServeHTTP(w,r) }','def fibonacci_matrix(n):','  A=[[1,1],[1,0]];result=[[1,0],[0,1]]','  while n>0:','    if n%2==1: result=matmul(result,A)','    A=matmul(A,A);n//=2','  return result[0][1]']
+    }
+  },
+  {id:17,group:'advanced',gc:'#f472b6',title:'Long Paragraphs',desc:'ចំណែក វាយ Paragraph',keys:[],
+    texts:{
+      en:['Artificial intelligence is transforming every aspect of human civilization, from healthcare and education to transportation, finance, and creative arts, bringing both enormous opportunities and significant challenges that society must thoughtfully address together.','The development of large language models like GPT and Claude represents a fundamental shift in how computers understand and generate human language, enabling applications that were previously thought impossible just a few short years ago.','Climate change poses an existential threat to biodiversity and human civilization unless drastic reductions in greenhouse gas emissions are achieved within the next decade through international cooperation and technological innovation.','The intersection of neuroscience and artificial intelligence continues to reveal fascinating insights about the nature of intelligence, consciousness, and learning, blurring the boundaries between biological and artificial minds in profound ways.','Quantum computing promises to revolutionize fields ranging from cryptography and drug discovery to materials science and financial modeling by harnessing the principles of quantum mechanics to perform calculations exponentially faster than classical computers.','The philosophy of technology examines how digital tools and networked systems reshape human identity, social relationships, democratic institutions, and our collective understanding of truth, privacy, and personal autonomy in the modern world.','Blockchain and distributed ledger technologies are creating new paradigms for trust, ownership, and coordination without central authorities, enabling decentralized finance, digital ownership of assets, and new forms of collective governance.','The global semiconductor shortage has exposed critical vulnerabilities in modern supply chains, prompting nations to invest heavily in domestic chip manufacturing capacity and rethink their approach to strategic industrial policy and economic security.','Machine learning models trained on vast datasets can now perform tasks ranging from medical image analysis and drug discovery to creative writing and complex strategy games, often matching or exceeding human expert performance in narrow domains.','The metaverse represents a convergence of augmented reality, virtual reality, social networking, and digital economies into immersive shared spaces where people work, play, learn, and create together across physical boundaries.'],
+      km:['ការអភិវឌ្ឍប្រទេសជាតិ ត្រូវការការសហការពីប្រជាពលរដ្ឋទាំងអស់ ជាមួយរដ្ឋាភិបាល ដើម្បីសម្រេចបាននូវការចំរើនលូតលាស់ប្រកបដោយចីរភាព ។','វិទ្យាសាស្ត្រ និងបច្ចេកវិទ្យា ជាចំណុចចាប់ផ្ដើមនៃការអភិវឌ្ឍជាតិ ហើយការវិនិយោគលើការស្រាវជ្រាវ ជួយផ្លាស់ប្ដូរជីវភាពរស់នៅ ។','ការអប់រំជំនាន់ថ្មី ត្រូវការការប្រើប្រាស់បច្ចេកវិទ្យាទំនើប ដើម្បីបង្កើនការសិក្សារបស់សិស្សានុសិស្ស ក្នុងសង្គម ២១ ។','ជំនាញ AI, Data Science, Cybersecurity, Cloud Computing ជាជំនាញដ៏ខ្ពស់ ដែលទីផ្សារការងារ ត្រូវការ ច្រើន ។','ការអភិវឌ្ឍន៍ Startup ក្នុងប្រទេសកម្ពុជា កំពុងរីកចំរើន ហើយក្មេងជំនាន់ថ្មី ត្រូវប្រជ្រៀតខ្លួន ចូលក្នុង ទីផ្សារ ។','ក្រោមរបបប្រជាធិបតេយ្យ ប្រជាពលរដ្ឋ មានសិទ្ធិ ច្រើន ដែល ត្រូវ ការ ពារ ដោយ ច្បាប់ ។','ការ ពង្រីក ការ ប្រើ ប្រាស់ ថាមពល ព្រះ អាទិត្យ ជំ នំ ថាមពល ខ្យល់ ជួយ ឱ្យ ប្រទេស ជាតិ ស ។','ការ ស្ម័គ្រ ចិត្ត ជួយ ដល់ សហ គម ន៍ ជា ការ ចូល រួម ដ៏ ពិ ត ប្រាកដ ក្នុង ការ អភិ វឌ្ឍ ប្រទេស ។','ការ ជ្រើស រើស ការ ខំ ប្រឹង ជំ នួស ការ ខ្ជិល ចិត្ត ។ ជោគ ជ័យ ចាំ អ្នក ។','ខ្ញុំ ជឿ ថា ជំ នាន់ ក្មេង ខ្មែរ ទ្រង់ ទ្រាយ ល្អ ជំ នាន់ ក្មេង ណា ១ ក្នុង ពិ ភព លោក ។'],
+      code:['// Long-form typing practice for advanced programmers who want to improve at real-world coding tasks','const typingApp = { version: "3.0", lessons: 20, languages: ["en","km","code"], features: ["keyboard","hands","theme","teacher"] };','/* Typing Master KH - Built with pure HTML, CSS, and vanilla JavaScript for maximum compatibility */',`class TypingSession {
+  constructor(userId, lessonId, lang) {
+    this.userId = userId; this.lessonId = lessonId; this.lang = lang;
+    this.startTime = null; this.errors = 0; this.typed = "";
+  }
+  start() { this.startTime = Date.now(); }
+  getWPM() { const mins=(Date.now()-this.startTime)/60000; return Math.round((this.typed.length/5)/mins); }
+  getAccuracy() { const correct=[...this.typed].filter((c,i)=>c===this.target[i]).length; return Math.round((correct/this.typed.length)*100); }
+}`,'const results = await Promise.all(students.map(async s => { const sessions = await db.getSessions(s.id); return { ...s, avgWpm: avg(sessions.map(ss=>ss.wpm)), topWpm: max(sessions.map(ss=>ss.wpm)) }; }));']
+    }
+  },
+  {id:18,group:'king',gc:'#fbbf24',title:'👑 King Speed',desc:'90+ WPM Expert Level',keys:[],
+    texts:{
+      en:['The philosophy of technology examines how tools and machines shape human civilization and thought processes deeply.','Quantum entanglement allows particles to instantaneously affect each other regardless of the physical distance between them.','Neural networks learn by iteratively adjusting connection weights through backpropagation to minimize prediction error efficiently.','The intersection of neuroscience and artificial intelligence has led to remarkable breakthroughs in understanding human cognition.','Blockchain technology provides a decentralized immutable ledger ensuring transparency and trust without requiring central authority.','Microservices architecture enables teams to independently develop, deploy, scale, and maintain individual application components.','Functional programming treats computation as the mathematical evaluation of pure functions, avoiding mutable state entirely.','The CAP theorem proves no distributed system can simultaneously guarantee consistency, availability, and partition tolerance.','Event-driven architecture enables services to communicate asynchronously through events, greatly reducing tight coupling between systems.','Kubernetes orchestrates containerized workloads across clusters, automating deployment, scaling, health monitoring, and self-healing.','The observer pattern establishes one-to-many dependency so that when one object changes state, all its dependents are notified.','Type inference allows compilers to automatically deduce expression types without requiring programmers to write explicit type annotations.','Memoization optimizes performance by caching results of expensive function calls, returning cached results for identical subsequent inputs.','Tail call optimization allows recursive functions to execute in constant stack space by cleverly reusing the current stack frame.','The Rust language achieves memory safety without garbage collection through its innovative ownership, borrowing, and lifetime system.'],
+      km:['ការអភិវឌ្ឍប្រទេសជាតិ ត្រូវការការសហការពីប្រជាពលរដ្ឋ ជាមួយរដ្ឋាភិបាល ដើម្បីសម្រេចបាននូវចំរើន ប្រកបដោយចីរភាព ។','វិទ្យាសាស្ត្រ និងបច្ចេកវិទ្យា ជាចំណុចចាប់ផ្ដើមនៃការអភិវឌ្ឍជាតិ ហើយការវិនិយោគលើការស្រាវជ្រាវ ផ្លាស់ប្ដូរជីវភាព ។','ការអប់រំជំនាន់ថ្មីត្រូវការបច្ចេកវិទ្យាទំនើប ដើម្បីបង្កើនការសិក្សាសិស្ស ក្នុងសង្គម ២១ ។','ជំនាញ AI, Data Science, Cybersecurity, Cloud Computing ជាជំនាញខ្ពស់ ដែលទីផ្សារការងារ ត្រូវការ ច្រើន ។','ការអភិវឌ្ឍន៍ Startup ក្នុងប្រទេសកម្ពុជា កំពុងរីកចំរើន ហើយក្មេងជំនាន់ថ្មី ត្រូវប្រជ្រៀតខ្លួន ។','ជំនាញ AI Machine Learning Deep Learning កំពុងផ្លាស់ប្ដូររបៀបការងារ និងជីវិតមនុស្ស ។','ការអភិវឌ្ឍ web application ត្រូវការចំណេះ frontend backend database security ។','Cloud computing ផ្ដល់ភាពបត់បែន ប្រសិទ្ធភាព ក្រុមហ៊ុន និងអ្នកប្រើប្រាស់ ។','ជំនាញ DevOps ជួយក្រុម developer ចេញផ្សាយ software បានលឿន ត្រឹមត្រូវ ។','Security ជាផ្នែកសំខាន់ ក្នុងការអភិវឌ្ឍ software ព្រោះការ hack បំផ្លាញអ្វីៗ ។'],
+      code:['export const createStore=(reducer,enhancer)=>enhancer?enhancer(createStore)(reducer):{dispatch,getState,subscribe};','async function* asyncGenerator(items){for await(const item of items){yield await processItem(item);}}','type DeepPartial<T>=T extends object?{[P in keyof T]?: DeepPartial<T[P]>}:T;','const useLocalStorage=<T>(key:string,init:T):[T,(v:T)=>void]=>{const[v,setV]=useState<T>(()=>{try{return JSON.parse(localStorage.getItem(key)!);}catch{return init;}});return[v,v=>{setV(v);localStorage.setItem(key,JSON.stringify(v));}];};','SELECT u.id,u.name,COUNT(o.id) orders,SUM(o.total) revenue FROM users u LEFT JOIN orders o ON o.user_id=u.id WHERE u.active=1 GROUP BY u.id HAVING revenue>1000 ORDER BY revenue DESC LIMIT 20;','const withRetry=<T>(fn:()=>Promise<T>,retries=3,delay=1000):Promise<T>=>fn().catch(e=>retries>0?new Promise(r=>setTimeout(r,delay)).then(()=>withRetry(fn,retries-1,delay*2)):Promise.reject(e));','kubectl create secret generic db-creds --from-literal=user=admin --from-literal=password=secret123 -n production --dry-run=client -o yaml|kubectl apply -f -','FROM python:3.11-slim AS base;WORKDIR /app;COPY requirements.txt .;RUN pip install --no-cache-dir -r requirements.txt;COPY . .;EXPOSE 8000;CMD ["gunicorn","app:create_app()","--workers=4"]','resource "aws_ecs_service" "app"{name="app";cluster=aws_ecs_cluster.main.id;task_definition=aws_ecs_task_definition.app.arn;desired_count=3;launch_type="FARGATE";}','interface Repository<T extends{id:string}>{findById(id:string):Promise<T|null>;findAll(f?:Partial<T>):Promise<T[]>;create(d:Omit<T,"id">):Promise<T>;update(id:string,d:Partial<T>):Promise<T>;delete(id:string):Promise<void>;}']
+    }
+  },
+  {id:19,group:'king',gc:'#fbbf24',title:'👑 King Motivation',desc:'ចិត្ត អំណាច · Inspiration',keys:[],
+    texts:{
+      en:['Believe you can and you are halfway there. Hard work consistently beats talent when talent refuses to work hard enough.','Success is not final and failure is not fatal. It is the courage to continue after every setback that truly counts.','The secret of getting ahead is simply getting started today. Do not wait for the perfect moment, create it yourself.','Dream big, work hard, stay humble, and never stop learning new things. That is the only path to lasting greatness.','Every master was once a complete beginner. Every world-class expert was once a nervous novice who simply refused to quit.','Your only real limit is your own mind. Change your thinking and your beliefs, and you will change your entire world.','Discipline is choosing between what you want right now and what you want most deeply in the long run.','Do not count the days, make every day count. Each and every day is a new chance to become a better version of yourself.','The difference between ordinary and extraordinary is simply that little bit of extra effort you choose to give every single time.','Opportunities do not simply happen to you by accident. You create them through years of preparation, persistence, and clear purpose.','It always seems completely impossible until someone actually does it. Break your big goal down into tiny daily habits and actions.','Fall seven times and stand up eight. Resilience and the willingness to keep going is the most important trait of all successful people.','Surround yourself only with people who push you to become higher and challenge you to grow far beyond your current limits.','Your future is shaped and created by what you actually do today, not by what you merely plan to do tomorrow.','The harder you truly work for something meaningful, the greater and more profound you will feel when you finally achieve it.'],
+      km:['ក្ដីស្រមៃដ៏ធំ ត្រូវការការខំប្រឹង ប្រែង ជំ ហ ន ។ កុំ ខ្លាច ការ បរាជ័យ ព្រោះ វា ជា គ្រូ ។','ការខំប្រឹងប្រែងថ្ងៃនេះ គឺ ជា មូលដ្ឋានគ្រឹះ នៃ ជោគ ជ័យ ថ្ងៃ ស្អែក ។ ចូររៀន ចូរខំ ចូរ ប្រឹង ។','ការបរាជ័យ មិន មែន ជា ចុង បញ្ចប់ ។ វា ជា ឱ កាស ដើម្បី ឈ្នះ ហើយ ក្លាយ ជា ខ្លាំង ជាង ។','អ្នក ដែល ខំ ប្រឹង រៀន ហើយ ប្រឹង ធ្វើ ការ តែង តែ ទទួល បាន ជោគ ជ័យ ។','ជំ នាញ ចំ ណេះ ដឹង ការ ខំ ទំ នុក ចិត្ត ជីវិត ជោគ ជ័យ ។ ជា ផ្លូវ ទៅ ភ្នំ ខ្ពស់ ។','ថ្ងៃ នីមួយ ៗ ជា ឱ កាស ថ្មី ។ ចូរ ប្រើ ប្រាស់ ពេល វេលា ឱ្យ បាន ល្អ ។','ចំ ណុច ខ្លាំង គឺ ការ មិន លក់ ចោល ក្ដី ស្រ មៃ ។ ខំ ប្រឹង ជា រៀង រាល់ ថ្ងៃ ។','ការ ហ្វឹក ហ្វឺន ថ្ងៃ ១ ពិ បាក ។ ថ្ងៃ ១ ០ ល្អ ជាង ។ ថ្ងៃ ១ ០ ០ ល្អ ណាស់ ។','ស្ នា ដៃ ម្ដង ធ្វើ ត្រឹម ១ ។ ជា ប្រ ចាំ ល្មមល្អ ។ ដ ៏ ខ្ពស់ ។','ខំ ខ្លាំង ថ្ងៃ នេះ ។ ជោគ ជ័យ ចំ ណេះ ជំ នាញ ។ ព្រះ ។'],
+      code:['// The best code is code that never needed to be written. Keep it simple, readable, and maintainable always.','const wisdom=(days)=>days>365?"expert":days>30?"intermediate":"beginner";','// "First make it work, then make it right, then make it fast." — Kent Beck, XP Explained','const progress={yesterday:0,today:1,tomorrow:()=>progress.today+1};','// Every great developer got there by solving problems they were initially unqualified to solve.','const persist=(goal,days)=>Array.from({length:days},(_,i)=>i+1).map(d=>d>=days?goal:"keep going");','// Programs must be written for people to read, and only incidentally for machines to execute.','const king={practice:"daily",accuracy:"first",speed:"follows",quit:()=>false};','type King={wpm:number;accuracy:number;dedication:"daily";quit:never;};','class Champion{constructor(){this.practice=()=>this;this.neverQuit=true;this.improve=()=>this.practice();}}','// Typing is a superpower in the digital age. Invest the time. It pays dividends forever and always.','const path=["start","struggle","improve","plateau","breakthrough","mastery"].at(-1);','const champion=({wpm,acc})=>wpm>=90&&acc>=95?"King 👑":wpm>=70?"Master":"Keep going 💪";','// Your keyboard is your sword. Master it. The most productive person types without thinking at all.','export default {practice:"daily",focus:"accuracy",patience:"infinite",quit:false,level:"KING 👑"};']
+    }
+  },
+  {id:20,group:'king',gc:'#fbbf24',title:'👑 ULTIMATE',desc:'Cambodia + Tech + Life',keys:[],
+    texts:{
+      en:['The Kingdom of Cambodia, officially known as the Kingdom of Wonder, is a Southeast Asian nation with extraordinary cultural heritage.','Angkor Wat, built in the early 12th century by King Suryavarman II, remains the largest religious monument ever constructed on Earth.','The Mekong River, one of the most biodiverse rivers on Earth, flows through Cambodia providing livelihoods for millions of people.','Cambodia is undergoing a remarkable digital transformation with young entrepreneurs building startups that compete on the global stage.','The Khmer language, one of the oldest written languages in Southeast Asia, has its own unique script with a rich literary tradition.','Cambodia joined ASEAN in 1999 and has since integrated into regional economic frameworks, attracting significant foreign direct investment.','The garment sector, tourism industry, and agriculture remain pillars of the Cambodian economy alongside the rapidly growing technology sector.','Cambodian youth today have unprecedented access to education, technology, and global networks that previous generations could only dream about.','The Cambodia AI community is growing rapidly with universities producing graduates skilled in machine learning, data science, and software engineering.','Learning to type quickly and accurately is one of the most valuable professional skills anyone can develop in the twenty-first century.','The ability to express your ideas clearly through writing, combined with fast typing, multiplies your effectiveness across every field imaginable.','Every hour you invest in improving your typing speed is an investment that pays compound returns throughout your entire professional career.','Whether you are a student, developer, writer, teacher, doctor, or business owner, keyboard proficiency makes everything you do faster and better.','The journey from beginner to King in typing is the same journey as mastery in any other skill: deliberate daily practice without excuses.','You have reached the final lesson. You are now a TypingMaster. Share your skill, help others, and keep typing every single day!'],
+      km:['ព្រះរាជាណាចក្រ កម្ពុជា ជា ប្រទេស ក្នុង តំ បន់ អាស៊ី អាគ្នេយ៍ ដែល មាន ប្រវត្តិ វប្បធម៌ ដ៏ ចំ លែក ។','ប្រាសាទ អង្គរ វត្ត ត្រូវ បាន បង្ក ើត ក្នុង សតវត្ស ទី ១ ២ ដោយ ព្រះ បាទ សូ រ្យ វ ម្ ដែ ន ទី ២ ។','ទ ន្ លេ មេ គ ង វិ ហ ស ្ សសសសសសស ស្ សសសសសសសសសសសសសសសសសសសសសសសសសសសសសសសសសសសសស','ព្រះ រាជ ាណ ា ចក្រ កម្ ពុ ជា ជ ួ ប ផ ្ ល ូ វ ថ ្ ម ី ត ាម ប ច្ ច េ ក វ ិ ទ ្ យ ា ។','ក ្ ម េ ង ជ ំ ន ា ន ់ ថ ្ ម ី ខ ្ ម ែ រ ម ា ន ស ំ ណ ា ញ ់ អ ន ្ ត រ ជ ា ត ិ ។','ការ រ ីក ចំ រើ ន ន ៃ ប ្ រ ទ េ ស ក ម ្ ព ុ ជ ា ជ ា ន ិ ម ិ ត ្ ត ស ញ ្ ញ ា ន ៃ ។','ជំ ន ា ញ ភ ា ស ា ប ច ្ ច េ ក វ ិ ទ ្ យ ា ជ ំ ន ួ ន ា ំ ទ ៅ ជោ គ ជ ័ យ ។','ការ ខ ំ ប ្ រ ឹ ង ប ្ រ ែ ង ជ ា រ ី យ ង រ ា ល ់ ថ ្ ង ៃ ន ឹ ង ន ា ំ ដ ល ់ ជោ គ ។','អ ្ ន ក ប ា ន ប ញ ្ ច ប ់ ម េ រ ្ ី យ ន ២ ០ ហ ើ យ ！ ជំ ន ា ញ វ ា យ ព ូ ក ែ ！','ថ ្ ន ា ក ់ ព ូ ក ែ ！ ជ ំ ន ា ញ ដ ៏ ខ ្ ព ស ់ ！ ព ្ រ ះ រ ា ជ ！ 👑 ！'],
+      code:['// 🎉 CONGRATULATIONS! You completed all 20 lessons of TypingMaster KH!','// You are now a certified TypingMaster. WPM: 90+, Accuracy: 95%+','const achievement = { title: "👑 Typing King", lessons: 20, wpm: "90+", accuracy: "95%+" };','// Total journey: Beginner → Elementary → Intermediate → Advanced → King','const journey = ["Home Row","ASDF+EI","Home+GH","T+Y","QWR","UOP","ZXCV","Full A-Z","Numbers","Punctuation","Capitals","Common Words","KH Words","Speed 60+","SQL+CLI","React+TS","Paragraphs","King Speed","Motivation","ULTIMATE 👑"];','console.log("You typed through", journey.length, "lessons and mastered the keyboard!");','// Share your achievement! Post your WPM score and inspire others to learn.','const message = `I completed TypingMaster KH! My WPM: ${yourWpm}, Accuracy: ${yourAcc}% 🎉`;','// Keep practicing. The best typists never stop improving. Set new records every week.','export const KING_ACHIEVED = true; // You earned this. 👑 Never stop typing!','// Built with ❤️ for Cambodia. TypingMaster KH v3.0','// Every keystroke counts. Every session matters. Every day you improve.','const legacy = { language: "Khmer 🇰🇭", mission: "教育 · Education · ការ​អប់​រំ" };','// To all students: You started at Lesson 1. You reached Lesson 20. That is everything.','// TypingMaster KH — Empowering Cambodia one keystroke at a time. 🇰🇭⌨️👑']
+    }
+  }
+];
+
+// ============================================================
+// KEYBOARD LAYOUT
+// ============================================================
+const KB = [
+  [{k:'`',f:'fL0'},{k:'1',f:'fL0'},{k:'2',f:'fL1'},{k:'3',f:'fL2'},{k:'4',f:'fL3'},{k:'5',f:'fL4'},{k:'6',f:'fR4'},{k:'7',f:'fR3'},{k:'8',f:'fR2'},{k:'9',f:'fR1'},{k:'0',f:'fR0'},{k:'-',f:'fR0'},{k:'=',f:'fR0'},{k:'⌫',f:'fR0',w:'w2'}],
+  [{k:'Tab',f:'fL0',w:'w15'},{k:'q',f:'fL0'},{k:'w',f:'fL1'},{k:'e',f:'fL2'},{k:'r',f:'fL3'},{k:'t',f:'fL4'},{k:'y',f:'fR4'},{k:'u',f:'fR3'},{k:'i',f:'fR2'},{k:'o',f:'fR1'},{k:'p',f:'fR0'},{k:'[',f:'fR0'},{k:']',f:'fR0'},{k:'\\',f:'fR0',w:'w15'}],
+  [{k:'Caps',f:'fL0',w:'w2'},{k:'a',f:'fL0',h:1},{k:'s',f:'fL1',h:1},{k:'d',f:'fL2',h:1},{k:'f',f:'fL3',h:1},{k:'g',f:'fL4',h:1},{k:'h',f:'fR4',h:1},{k:'j',f:'fR3',h:1},{k:'k',f:'fR2',h:1},{k:'l',f:'fR1',h:1},{k:';',f:'fR0',h:1},{k:"'",f:'fR0',h:1},{k:'Enter',f:'fR0',w:'w25'}],
+  [{k:'Shift',f:'fL0',w:'w3'},{k:'z',f:'fL0'},{k:'x',f:'fL1'},{k:'c',f:'fL2'},{k:'v',f:'fL3'},{k:'b',f:'fL4'},{k:'n',f:'fR4'},{k:'m',f:'fR3'},{k:',',f:'fR2'},{k:'.',f:'fR1'},{k:'/',f:'fR0'},{k:'Shift',f:'fR0',w:'w4'}],
+  [{k:'Ctrl',f:'fL0',w:'w15'},{k:'Alt',f:'fL1',w:'w15'},{k:' ',f:'fTh',w:'wsp',label:'SPACE'},{k:'Alt',f:'fR1',w:'w15'},{k:'Ctrl',f:'fR0',w:'w15'}]
+];
+const KMAP={};KB.forEach(r=>r.forEach(k=>{if(k.k&&k.k.length===1)KMAP[k.k.toLowerCase()]=k.f;}));KMAP[' ']='fTh';
+const FINGER_NAMES={'fL0':'ម្រាមមេ (Pinky) ឆ្វេង','fL1':'ម្រាម (Ring) ឆ្វេង','fL2':'ម្រាម (Middle) ឆ្វេង','fL3':'ម្រាម (Index) ឆ្វេង','fL4':'ម្រាម (Index+) ឆ្វេង','fR4':'ម្រាម (Index) ស្ដាំ','fR3':'ម្រាម (Index) ស្ដាំ','fR2':'ម្រាម (Middle) ស្ដាំ','fR1':'ម្រាម (Ring) ស្ដាំ','fR0':'ម្រាមមេ (Pinky) ស្ដាំ','fTh':'ក្ដៅ (Thumb)'};
+const HMAP_L={'fL0':0,'fL1':1,'fL2':2,'fL3':3,'fL4':3};
+const HMAP_R={'fR0':0,'fR1':1,'fR2':2,'fR3':3,'fR4':3};
+
+// ============================================================
+// STATE
+// ============================================================
+let currentLang='en', currentLessonIdx=0, currentText='', typed='';
+let started=false, finished=false, startTime=null;
+let timerInterval=null, countdownTimer=null;
+let totalErrors=0, timerDuration=60, timeLeft=60;
+const TIMERS=[30,60,120]; let timerIdx=1;
+let wpmHistory=[], wpmBars=[], keyEls={}, lastHL=null;
+let completedLessons=new Set(JSON.parse(localStorage.getItem('tm_done')||'[]'));
+let currentUser=null;
+let isTeacher=false;
+
+// Theme state
+let themeState={dark:true,accent:'#38bdf8',bg:'default',fontSize:19,showKb:true,showHands:true};
+
+// ============================================================
+// ACCENT COLORS
+// ============================================================
+const ACCENTS=['#38bdf8','#818cf8','#f472b6','#34d399','#fb923c','#fbbf24','#f87171','#a78bfa','#2dd4bf','#60a5fa'];
+const BG_PRESETS=[
+  {name:'Default Dark',value:'default',colors:['#080c14','#0d1220','#0f1623']},
+  {name:'Deep Ocean',value:'ocean',colors:['#061220','#0a1f35','#0f2840']},
+  {name:'Forest Night',value:'forest',colors:['#0a140a','#101e10','#141f14']},
+  {name:'Purple Haze',value:'purple',colors:['#100818','#180c28','#1e1035']},
+  {name:'Volcanic',value:'volcanic',colors:['#140808','#200c0c','#281010']},
+  {name:'Pure Light',value:'light',colors:['#f0f4ff','#ffffff','#e8eef8']}
+];
+
+// ============================================================
+// THEME ENGINE
+// ============================================================
+function applyTheme(){
+  const t=themeState;
+  document.documentElement.setAttribute('data-theme',t.dark?'dark':'light');
+  document.getElementById('darkToggle').checked=t.dark;
+  document.getElementById('themeIcon').textContent=t.dark?'🌙':'☀️';
+  document.getElementById('themeLabel').textContent=t.dark?'ជប់ / Dark':'ថ្ងៃ / Light';
+  if(document.getElementById('themeIcon2'))document.getElementById('themeIcon2').textContent=t.dark?'🌙':'☀️';
+  document.documentElement.style.setProperty('--accent',t.accent);
+  document.documentElement.style.setProperty('--accent2',adjustColor(t.accent,30));
+  const preset=BG_PRESETS.find(b=>b.value===t.bg);
+  if(preset&&t.dark&&t.bg!=='default'&&t.bg!=='light'){
+    document.documentElement.style.setProperty('--bg',preset.colors[0]);
+    document.documentElement.style.setProperty('--bg2',preset.colors[1]);
+    document.documentElement.style.setProperty('--card',preset.colors[2]);
+  } else {
+    document.documentElement.style.removeProperty('--bg');
+    document.documentElement.style.removeProperty('--bg2');
+    document.documentElement.style.removeProperty('--card');
+  }
+  document.querySelectorAll('.display-text').forEach(el=>el.style.fontSize=t.fontSize+'px');
+  document.querySelector('.keyboard-section,#keyboard')?.parentElement;
+  document.querySelectorAll('.color-swatch').forEach(sw=>{sw.classList.toggle('selected',sw.dataset.color===t.accent)});
+  document.querySelectorAll('.bg-preset').forEach(bp=>{bp.classList.toggle('selected',bp.dataset.bg===t.bg)});
+  localStorage.setItem('tm_theme',JSON.stringify(t));
+}
+function adjustColor(hex,deg){return hex;} // simplified — accent2 set separately
+function toggleTheme(){themeState.dark=!themeState.dark;applyTheme();}
+function changeFontSize(v){themeState.fontSize=+v;document.getElementById('fontSizeLabel').textContent=v;document.querySelectorAll('.display-text').forEach(el=>el.style.fontSize=v+'px');}
+function toggleKb(){const kb=document.getElementById('keyboard')?.parentElement?.closest('.kb-section');if(kb)kb.style.display=themeState.showKb?'block':'none';}
+function toggleHands(){const hw=document.querySelector('.hands-wrap');if(hw)hw.style.display=document.getElementById('handToggle').checked?'flex':'none';}
+function resetTheme(){themeState={dark:true,accent:'#38bdf8',bg:'default',fontSize:19,showKb:true,showHands:true};document.getElementById('fontRange').value=19;document.getElementById('kbToggle').checked=true;document.getElementById('handToggle').checked=true;applyTheme();}
+function openThemePanel(){document.getElementById('themePanel').classList.add('open')}
+function closeThemePanel(){document.getElementById('themePanel').classList.remove('open')}
+
+function buildThemePanel(){
+  const ag=document.getElementById('accentGrid');
+  ag.innerHTML='';
+  ACCENTS.forEach(c=>{
+    const sw=document.createElement('div');
+    sw.className='color-swatch'+(c===themeState.accent?' selected':'');
+    sw.style.background=c;sw.dataset.color=c;
+    sw.onclick=()=>{themeState.accent=c;applyTheme();};
+    ag.appendChild(sw);
+  });
+  const bp=document.getElementById('bgPresets');
+  bp.innerHTML='';
+  BG_PRESETS.forEach(p=>{
+    const el=document.createElement('div');
+    el.className='bg-preset'+(p.value===themeState.bg?' selected':'');
+    el.dataset.bg=p.value;
+    const prev=document.createElement('div');
+    prev.className='bg-preview';
+    prev.style.background=`linear-gradient(135deg,${p.colors[0]},${p.colors[1]||p.colors[0]})`;
+    el.appendChild(prev);
+    el.appendChild(document.createTextNode(p.name));
+    el.onclick=()=>{themeState.bg=p.value;if(p.value==='light'){themeState.dark=false;}else{themeState.dark=true;}applyTheme();buildThemePanel();};
+    bp.appendChild(el);
+  });
+}
+
+// ============================================================
+// AUTH
+// ============================================================
+function switchFormTab(type,btn){
+  document.querySelectorAll('.form-tab').forEach(b=>b.classList.remove('active'));btn.classList.add('active');
+  document.getElementById('studentForm').style.display=type==='student'?'block':'none';
+  document.getElementById('teacherForm').style.display=type==='teacher'?'block':'none';
+}
+function studentLogin(){
+  const name=document.getElementById('regName').value.trim();
+  const cls=document.getElementById('regClass').value;
+  const lang=document.getElementById('regLang').value;
+  if(!name){showToast('⚠️ សូមបញ្ចូល ឈ្មោះ!','error');return;}
+  if(!cls){showToast('⚠️ សូមជ្រើស ថ្នាក់!','error');return;}
+  currentUser={name,cls,lang,joinTime:new Date().toISOString(),wpm:0,acc:100,errors:0,lesson:1};
+  currentLang=lang;isTeacher=false;
+  document.getElementById('userAvatar').textContent=name[0].toUpperCase();
+  document.getElementById('userNameBadge').textContent=name;
+  document.getElementById('userClassBadge').textContent=cls;
+  setLangBtn(lang);
+  showPage('pageApp');
+  buildSidebar();buildKeyboard();buildWpmChart();
+  selectLesson(0);
+  showToast('🎉 ស្វាគមន៍ '+name+'!','success');
+}
+function teacherLogin(){
+  const name=document.getElementById('tName').value.trim();
+  const pass=document.getElementById('tPass').value;
+  if(!name){showToast('⚠️ សូមបញ្ចូល ឈ្មោះ!','error');return;}
+  if(pass!=='teacher123'&&pass!==''){showToast('❌ Password ខុស!','error');return;}
+  isTeacher=true;currentUser={name,role:'teacher'};
+  document.getElementById('teacherNameBadge').textContent=name;
+  showPage('pageTeacher');
+  refreshDash();
+  showToast('👨‍🏫 ស្វាគមន៍ Teacher '+name+'!','success');
+}
+function logout(){showPage('pageReg');document.getElementById('regName').value='';document.getElementById('tPass').value='';currentUser=null;}
+function showPage(id){document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));document.getElementById(id).classList.add('active');}
+
+// ============================================================
+// SIDEBAR
+// ============================================================
+function buildSidebar(){
+  const list=document.getElementById('lessonList');list.innerHTML='';
+  const groups={beginner:'ថ្នាក់ដំបូង',intermediate:'កណ្ដាល',advanced:'ខ្ពស់',king:'👑 King'};
+  const gcolors={beginner:'#60a5fa',intermediate:'#818cf8',advanced:'#f472b6',king:'#fbbf24'};
+  const grouped={};
+  LESSONS.forEach((l,i)=>{(grouped[l.group]=grouped[l.group]||[]).push({...l,idx:i});});
+  Object.keys(grouped).forEach(g=>{
+    const gh=document.createElement('div');gh.className='lesson-group';
+    const lbl=document.createElement('div');lbl.className='group-hdr';
+    lbl.innerHTML=`<span class="group-dot" style="background:${gcolors[g]}"></span>${groups[g]||g}`;
+    gh.appendChild(lbl);
+    grouped[g].forEach(l=>{
+      const btn=document.createElement('button');
+      btn.className='lesson-item'+(l.idx===currentLessonIdx?' active':'');
+      btn.id='litem-'+l.idx;
+      const done=completedLessons.has(l.id);
+      btn.innerHTML=`<span class="lnum">${l.id}</span>${l.title}<span class="lcheck">${done?'✓':''}</span>`;
+      btn.onclick=()=>selectLesson(l.idx);
+      gh.appendChild(btn);
+    });
+    list.appendChild(gh);
+  });
+}
+
+// ============================================================
+// LESSON
+// ============================================================
+function selectLesson(idx){
+  currentLessonIdx=idx;
+  document.querySelectorAll('.lesson-item').forEach(b=>b.classList.toggle('active',b.id==='litem-'+idx));
+  const l=LESSONS[idx];
+  document.getElementById('lessonHeading').textContent=`មេរៀន ${l.id} · ${l.title}`;
+  document.getElementById('lessonDesc').textContent=l.desc;
+  hlLessonKeys(l.keys||[]);
+  newText();
+}
+function nextLesson(){if(currentLessonIdx<LESSONS.length-1)selectLesson(currentLessonIdx+1);}
+function prevLesson(){if(currentLessonIdx>0)selectLesson(currentLessonIdx-1);}
+
+// ============================================================
+// TEXT
+// ============================================================
+function newText(){
+  const l=LESSONS[currentLessonIdx];
+  const pool=l.texts[currentLang]||l.texts.en;
+  currentText=pool[Math.floor(Math.random()*pool.length)];
+  resetState();renderText();
+}
+function restartCurrent(){resetState();renderText();}
+function resetAll(){newText();}
+function resetState(){
+  typed='';started=false;finished=false;startTime=null;totalErrors=0;timeLeft=timerDuration;wpmHistory=[];
+  clearInterval(timerInterval);clearInterval(countdownTimer);
+  document.getElementById('progBar').style.width='0%';
+  document.getElementById('typingInput').value='';
+  document.getElementById('textCard').classList.remove('typing-active');
+  document.getElementById('timerLeft').textContent=timerDuration;
+  document.getElementById('timerLeft').style.color='var(--accent)';
+  updateStats(0,100,0,0);
+  wpmBars.forEach(b=>b.style.height='3px');
+  clearKeyHL();
+  document.getElementById('typingInput').focus();
+}
+function clearInput(){document.getElementById('typingInput').value='';typed='';renderText();}
+
+// ============================================================
+// RENDER
+// ============================================================
+function renderText(){
+  const c=document.getElementById('displayText');c.innerHTML='';
+  for(let i=0;i<currentText.length;i++){
+    const s=document.createElement('span');s.textContent=currentText[i];
+    if(i<typed.length)s.className=typed[i]===currentText[i]?'correct':'wrong';
+    else if(i===typed.length)s.className='cursor';
+    else s.className='pending';
+    c.appendChild(s);
+  }
+  document.getElementById('progBar').style.width=Math.min((typed.length/currentText.length)*100,100)+'%';
+  if(typed.length<currentText.length)hlNextKey(currentText[typed.length].toLowerCase());
+  else clearKeyHL();
+}
+
+// ============================================================
+// INPUT
+// ============================================================
+document.getElementById('typingInput').addEventListener('input',function(){
+  if(finished)return;
+  const val=this.value;
+  if(!started&&val.length>0){
+    started=true;startTime=Date.now();
+    document.getElementById('textCard').classList.add('typing-active');
+    startCountdown();startWpmTracker();
+  }
+  typed=val.slice(0,currentText.length);
+  if(this.value.length>currentText.length)this.value=typed;
+  if(val.length>0){
+    const last=val[val.length-1];
+    const exp=currentText[typed.length-1];
+    if(last!==exp){
+      totalErrors++;
+      document.getElementById('textCard').classList.add('shake');
+      setTimeout(()=>document.getElementById('textCard').classList.remove('shake'),300);
+      const el=keyEls[last?.toLowerCase()];if(el){el.style.background='rgba(248,113,113,.4)';setTimeout(()=>el.style.background='',200);}
+    } else {
+      const el=keyEls[last?.toLowerCase()];if(el){el.classList.add('pressed');setTimeout(()=>el.classList.remove('pressed'),120);}
+    }
+  }
+  renderText();updateLiveStats();
+  if(typed.length===currentText.length)finishSession();
+});
+
+function updateLiveStats(){
+  if(!startTime)return;
+  const el=(Date.now()-startTime)/1000/60;
+  const wpm=el>0?Math.round((typed.length/5)/el):0;
+  const correct=[...typed].filter((c,i)=>c===currentText[i]).length;
+  const acc=typed.length>0?Math.round((correct/typed.length)*100):100;
+  const errs=[...typed].filter((c,i)=>c!==currentText[i]).length;
+  const secs=Math.round((Date.now()-startTime)/1000);
+  updateStats(wpm,acc,errs,secs);
+}
+function updateStats(wpm,acc,err,secs){
+  document.getElementById('wpmVal').textContent=wpm;
+  document.getElementById('accVal').textContent=acc+'%';
+  document.getElementById('errVal').textContent=err;
+  document.getElementById('timeVal').innerHTML='⏱ <span id="timerLeft" style="color:var(--accent)">'+timeLeft+'</span>s';
+}
+
+// ============================================================
+// TIMER
+// ============================================================
+function startCountdown(){
+  timeLeft=timerDuration;
+  countdownTimer=setInterval(()=>{
+    timeLeft--;
+    const tl=document.getElementById('timerLeft');
+    if(tl)tl.textContent=timeLeft;
+    if(timeLeft<=10&&tl)tl.style.color='var(--red)';
+    else if(timeLeft<=20&&tl)tl.style.color='var(--yellow)';
+    if(timeLeft<=0)finishSession();
+  },1000);
+}
+function startWpmTracker(){
+  timerInterval=setInterval(()=>{
+    updateLiveStats();
+    const wpm=parseInt(document.getElementById('wpmVal').textContent)||0;
+    wpmHistory.push(wpm);
+    const mx=Math.max(...wpmHistory,1);
+    const recent=wpmHistory.slice(-20);
+    wpmBars.forEach((b,i)=>{
+      const v=recent[i]||0;
+      b.style.height=Math.max(3,(v/mx)*30)+'px';
+      b.style.background=v>=60?'rgba(52,211,153,.5)':'rgba(56,189,248,.3)';
+    });
+  },1000);
+}
+function cycleTimer(){timerIdx=(timerIdx+1)%TIMERS.length;timerDuration=TIMERS[timerIdx];document.getElementById('timerLabel').textContent=timerDuration+'s';resetState();}
+function buildWpmChart(){const c=document.getElementById('wpmChart');c.innerHTML='';wpmBars=[];for(let i=0;i<20;i++){const b=document.createElement('div');b.className='wc-bar';c.appendChild(b);wpmBars.push(b);}}
+
+// ============================================================
+// FINISH
+// ============================================================
+function finishSession(){
+  if(finished)return;finished=true;
+  clearInterval(countdownTimer);clearInterval(timerInterval);
+  const elapsed=startTime?(Date.now()-startTime)/1000:1;
+  const wpm=Math.round((currentText.length/5)/(elapsed/60));
+  const correct=[...typed].filter((c,i)=>c===currentText[i]).length;
+  const acc=typed.length>0?Math.round((correct/typed.length)*100):100;
+  clearKeyHL();
+  // Save result
+  if(currentUser&&!isTeacher){
+    currentUser.wpm=Math.max(currentUser.wpm||0,wpm);
+    currentUser.acc=acc;currentUser.errors=totalErrors;
+    currentUser.lesson=LESSONS[currentLessonIdx].title;
+    currentUser.lessonId=LESSONS[currentLessonIdx].id;
+    currentUser.time=new Date().toISOString();
+    currentUser.elapsed=Math.round(elapsed);
+    saveStudent(currentUser);
+  }
+  const l=LESSONS[currentLessonIdx];
+  if(acc>=80){completedLessons.add(l.id);localStorage.setItem('tm_done',JSON.stringify([...completedLessons]));buildSidebar();}
+  let emoji='🎉',title='ល្អណាស់!',sub='Good job!';
+  if(wpm>=90&&acc>=95){emoji='👑';title='KING! ព្រះរាជ!';sub='You are a typing legend!';}
+  else if(wpm>=70&&acc>=95){emoji='🚀';title='ពូកែណាស់!';sub='Superb mastery!';}
+  else if(wpm>=50&&acc>=90){emoji='⭐';title='ល្អបំផុត!';sub='Great speed and accuracy!';}
+  else if(wpm>=30){emoji='💪';title='ប្រសើរ!';sub='Keep practicing daily!';}
+  else{emoji='📚';title='ព្យាយាមទៀត!';sub='Focus on accuracy first.';}
+  document.getElementById('resEmoji').textContent=emoji;
+  document.getElementById('resTitle').textContent=title;
+  document.getElementById('resSub').textContent=sub;
+  document.getElementById('rWpm').textContent=wpm;
+  document.getElementById('rAcc').textContent=acc+'%';
+  document.getElementById('rTime').textContent=Math.round(elapsed)+'s';
+  document.getElementById('doneBadge').style.display=acc>=80?'inline-flex':'none';
+  document.getElementById('resultOverlay').classList.add('show');
+}
+function closeResult(){document.getElementById('resultOverlay').classList.remove('show');}
+
+// ============================================================
+// STUDENT STORAGE
+// ============================================================
+function saveStudent(user){
+  const students=getStudents();
+  const idx=students.findIndex(s=>s.name===user.name&&s.cls===user.cls);
+  if(idx>=0){
+    // Keep best WPM
+    students[idx]={...students[idx],...user,wpm:Math.max(students[idx].wpm||0,user.wpm)};
+  } else {students.push(user);}
+  localStorage.setItem('tm_students',JSON.stringify(students));
+}
+function getStudents(){return JSON.parse(localStorage.getItem('tm_students')||'[]');}
+function clearAllStudents(){if(confirm('Clear all student data?')){localStorage.removeItem('tm_students');refreshDash();showToast('🗑 Cleared!','success');}}
+
+// ============================================================
+// TEACHER DASHBOARD
+// ============================================================
+function refreshDash(){
+  const students=getStudents();
+  document.getElementById('dTotal').textContent=students.length;
+  const wpms=students.map(s=>s.wpm||0);
+  const accs=students.map(s=>s.acc||0);
+  document.getElementById('dAvgWpm').textContent=students.length?Math.round(wpms.reduce((a,b)=>a+b,0)/students.length):0;
+  document.getElementById('dAvgAcc').textContent=students.length?Math.round(accs.reduce((a,b)=>a+b,0)/students.length)+'%':'0%';
+  document.getElementById('dTopWpm').textContent=students.length?Math.max(...wpms):0;
+  // Fill class filter
+  const classes=[...new Set(students.map(s=>s.cls))].filter(Boolean);
+  const fc=document.getElementById('filterClass');
+  fc.innerHTML='<option value="">ថ្នាក់ទាំងអស់</option>';
+  classes.forEach(c=>{const o=document.createElement('option');o.value=c;o.textContent=c;fc.appendChild(o);});
+  renderStudentTable();
+}
+function renderStudentTable(){
+  const search=(document.getElementById('searchInput')?.value||'').toLowerCase();
+  const filterCls=document.getElementById('filterClass')?.value||'';
+  const sortBy=document.getElementById('sortBy')?.value||'wpm';
+  let students=getStudents();
+  if(search)students=students.filter(s=>(s.name||'').toLowerCase().includes(search));
+  if(filterCls)students=students.filter(s=>s.cls===filterCls);
+  students.sort((a,b)=>{
+    if(sortBy==='wpm')return (b.wpm||0)-(a.wpm||0);
+    if(sortBy==='acc')return (b.acc||0)-(a.acc||0);
+    if(sortBy==='name')return (a.name||'').localeCompare(b.name||'');
+    if(sortBy==='time')return new Date(b.time||0)-new Date(a.time||0);
+    return 0;
+  });
+  const body=document.getElementById('studentTableBody');
+  if(!students.length){body.innerHTML='<div class="no-students">📭 គ្មាន Data · No students yet</div>';return;}
+  body.innerHTML='';
+  students.forEach((s,i)=>{
+    const wpmClass=s.wpm>=90?'wpm-gold':s.wpm>=60?'wpm-green':s.wpm>=30?'wpm-blue':'wpm-gray';
+    const rankClass=i===0?'rank-1':i===1?'rank-2':i===2?'rank-3':'rank-n';
+    const rankLabel=i===0?'🥇':i===1?'🥈':i===2?'🥉':'#'+(i+1);
+    const t=new Date(s.time||s.joinTime||0);
+    const timeStr=s.time?`${t.getHours()}:${String(t.getMinutes()).padStart(2,'0')}`:'—';
+    const row=document.createElement('div');row.className='student-row';
+    row.innerHTML=`
+      <div class="s-name"><div class="s-avatar">${(s.name||'?')[0].toUpperCase()}</div><div><div class="s-nm">${s.name||'—'}</div></div></div>
+      <div class="td">${s.cls||'—'}</div>
+      <div><span class="wpm-badge ${wpmClass}">${s.wpm||0}</span></div>
+      <div class="td">${s.acc||0}%</div>
+      <div class="td">${s.errors||0}</div>
+      <div class="td" style="font-size:11px">${s.lesson||'—'}</div>
+      <div><span class="rank-badge ${rankClass}">${rankLabel}</span></div>`;
+    body.appendChild(row);
+  });
+}
+function showTeacherPanel(p){
+  document.querySelectorAll('.sidebar .nav-btn').forEach(b=>b.classList.remove('active'));
+  event?.target?.classList.add('active');
+  refreshDash();
+}
+function exportCSV(){
+  const students=getStudents();
+  if(!students.length){showToast('No data to export','error');return;}
+  const headers=['Name','Class','WPM','Accuracy','Errors','Lesson','Time'];
+  const rows=students.map(s=>[s.name,s.cls,s.wpm,s.acc+'%',s.errors,s.lesson,s.time?new Date(s.time).toLocaleString():'—']);
+  const csv=[headers,...rows].map(r=>r.join(',')).join('\n');
+  const blob=new Blob([csv],{type:'text/csv'});
+  const a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download='typing_results.csv';a.click();
+  showToast('📥 Exported!','success');
+}
+
+// ============================================================
+// KEYBOARD
+// ============================================================
+function buildKeyboard(){
+  const kb=document.getElementById('keyboard');kb.innerHTML='';keyEls={};
+  KB.forEach(row=>{
+    const re=document.createElement('div');re.className='kb-row';
+    row.forEach(kd=>{
+      const el=document.createElement('div');
+      el.className='key '+kd.f+(kd.w?' '+kd.w:'')+(kd.h?' home-key':'');
+      el.textContent=kd.label||kd.k;
+      if(kd.k&&kd.k.length===1){keyEls[kd.k.toLowerCase()]=el;}
+      if(kd.k==='f'||kd.k==='j'){const d=document.createElement('span');d.className='sub';d.textContent='·';el.appendChild(d);}
+      re.appendChild(el);
+    });
+    kb.appendChild(re);
+  });
+}
+function hlLessonKeys(keys){
+  Object.values(keyEls).forEach(el=>el.classList.remove('hl'));
+  keys.forEach(k=>{const el=keyEls[k.toLowerCase()];if(el)el.classList.add('hl');});
+}
+function hlNextKey(ch){
+  if(lastHL&&keyEls[lastHL])keyEls[lastHL].classList.remove('hl');
+  const el=keyEls[ch]||(ch===' '?keyEls[' ']:null);
+  if(el){el.classList.add('hl');lastHL=ch;hlHand(KMAP[ch]);updateFG(ch,KMAP[ch]);}
+  else{hlHand(null);lastHL=null;}
+}
+function clearKeyHL(){if(lastHL&&keyEls[lastHL])keyEls[lastHL].classList.remove('hl');lastHL=null;hlHand(null);}
+function hlHand(fc){
+  document.querySelectorAll('.hf').forEach(f=>{f.classList.remove('alL','alR');});
+  if(!fc)return;
+  if(fc.startsWith('fL')){const i=HMAP_L[fc];const el=document.getElementById('lf'+i);if(el)el.classList.add('alL');}
+  else if(fc.startsWith('fR')){const i=HMAP_R[fc];const el=document.getElementById('rf'+i);if(el)el.classList.add('alR');}
+  else if(fc==='fTh'){document.getElementById('lf4')?.classList.add('alL');document.getElementById('rf4')?.classList.add('alR');}
+}
+function updateFG(ch,fc){
+  const fg=document.getElementById('fingerGuide');
+  if(!fg)return;
+  const fn=FINGER_NAMES[fc]||'';
+  fg.innerHTML=`🖐 ចុច <strong style="color:var(--accent)">${ch===' '?'SPACE':ch.toUpperCase()}</strong> · ${fn}`;
+}
+
+// ============================================================
+// LANG
+// ============================================================
+function switchLang(lang,btn){
+  currentLang=lang;setLangBtn(lang);
+  const tags={en:'ENGLISH',km:'ខ្មែរ',code:'CODE'};
+  document.getElementById('langPill').textContent=tags[lang]||lang;
+  newText();
+}
+function setLangBtn(lang){
+  ['EN','KM','Code'].forEach(l=>document.getElementById('lb'+l)?.classList.remove('active-btn'));
+  const map={en:'EN',km:'KM',code:'Code'};
+  document.getElementById('lb'+(map[lang]||'EN'))?.classList.add('active-btn');
+}
+
+// ============================================================
+// KEYBOARD SHORTCUTS
+// ============================================================
+document.addEventListener('keydown',e=>{
+  if(e.key==='Tab'&&document.getElementById('pageApp').classList.contains('active')){e.preventDefault();newText();}
+  if(e.key==='Escape'){closeResult();if(document.getElementById('pageApp').classList.contains('active'))resetAll();}
+  if(e.ctrlKey&&e.key==='ArrowRight'){e.preventDefault();nextLesson();}
+  if(e.ctrlKey&&e.key==='ArrowLeft'){e.preventDefault();prevLesson();}
+});
+
+// ============================================================
+// TOAST
+// ============================================================
+function showToast(msg,type='success'){
+  const t=document.getElementById('toast');t.textContent=msg;t.className='toast '+type+' show';
+  setTimeout(()=>t.classList.remove('show'),2800);
+}
+
+// ============================================================
+// INIT
+// ============================================================
+function init(){
+  // Load saved theme
+  const saved=localStorage.getItem('tm_theme');
+  if(saved){try{themeState={...themeState,...JSON.parse(saved)};}catch{}}
+  applyTheme();
+  buildThemePanel();
+}
+init();
+</script>
+</body>
+</html>
